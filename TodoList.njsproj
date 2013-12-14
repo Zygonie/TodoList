@@ -58,7 +58,6 @@
     <Content Include="public\img\OkBlack.png" />
     <Content Include="public\img\OkGreen.png" />
     <Content Include="README.md" />
-    <Content Include="views\home.jade" />
     <Content Include="views\layout.jade" />
     <Content Include="views\signin.jade" />
   </ItemGroup>
