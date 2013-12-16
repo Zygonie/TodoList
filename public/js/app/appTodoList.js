@@ -3,10 +3,59 @@
  * Définition du module d'application
  */
 
-var mariageApp = angular.module('appListMariage', ['ngResource','ui.bootstrap','ngSanitize']);
+var todoListApp = angular.module('appTodoList', ['ngRoute', 'ngResource','ui.bootstrap','ngSanitize']);
 
-mariageApp.factory('mariageEntries',['$resource', function($resource) {
-	return $resource('/api/listeMariage/:Id',
+/*
+ * Config
+ */
+todoListApp.config(['$routeProvider','$locationProvider', function($routeProvider,$locationProvider){
+	$routeProvider
+       .when('/todoList', {
+		   controller: 'todoListCtrl',
+		   templateUrl: '/todoList/home'
+	   }) 
+       .when('/todoList/home', {
+		   controller: 'todoListCtrl',
+		   templateUrl: '/todoList/home',
+		   reloadOnSearch: false
+	   })
+	   .when('/todoList/details/:listId', {
+		   controller: 'todoListCtrl',
+		   templateUrl: '/todoList/details',
+		   reloadOnSearch: false
+	   })
+	   .otherwise({redirectTo: '/todoList'});
+	$locationProvider.html5Mode(true);
+}]);
+
+/*
+ * Services
+ */
+todoListApp.factory('todoLists',['$resource', function($resource) {
+	return $resource('/api/todoList/:Id',
+			{ Id: '@Id' },
+			{
+				query:{
+					method: 'GET', 
+					isArray: true
+					},
+				create: {
+				    	method: 'POST'
+				    },
+				update: {
+				    	method: 'POST'
+				    },    
+				remove: {
+				    	method: 'DELETE'
+				    }
+			});
+}]);
+
+/*
+ * Services
+ */
+todoListApp.factory('tasks',['$resource', function($resource) {
+	return $resource('/api/task/:Id',
 			{ Id: '@Id' },
 			{
 				query:{
@@ -28,7 +77,7 @@ mariageApp.factory('mariageEntries',['$resource', function($resource) {
 /*
  * Directive Datepicker
  */
-mariageApp.directive('datepicker', function () {
+todoListApp.directive('datepicker', function () {
     return {
         restrict: 'C',
         require: 'ngModel',

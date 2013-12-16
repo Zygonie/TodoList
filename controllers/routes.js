@@ -3,13 +3,32 @@
   , dbUser = require('./userModel')
   , User = dbUser.userModel
   , dbTodoList = require('./todoListModel')
-  , TodoListEntry = dbTodoList.todoListModel; 
+  , TodoListEntry = dbTodoList.todoListModel
+  , dbTask = require('./taskModel')
+  , TaskEntry = dbTask.taskModel; 
 
 /*
  * Basic pages
  */
+exports.todoList = function (req, res) {
+    res.render('index', {
+        id: 'Home',
+        user: req.user
+    });
+};
+
 exports.home = function (req, res) {
-    res.render('home');
+    res.render('partials/home', {
+        id: 'Home',
+        user: req.user
+    });
+};
+
+exports.details = function (req, res) {
+    res.render('partials/details', {
+        id: 'Home',
+        user: req.user
+    });
 };
 
 exports.signin = function (req, res) {
@@ -32,7 +51,7 @@ exports.login = function(req, res, next) {
             if (err) { return next(err); }
             else { 
                 console.log(info); 
-                return res.redirect('/home');
+                return res.redirect('/todoList');
             }
         });
     }
@@ -43,22 +62,39 @@ exports.login = function(req, res, next) {
  * Google authentification
  */
 exports.googleLogin = passport.authenticate('google');
-exports.googleReturn = passport.authenticate('google', { successRedirect: '/home', failureRedirect: '/login' });
+exports.googleReturn = passport.authenticate('google', { successRedirect: '/todoList', failureRedirect: '/login' });
 
 /*
  * REST API Todo List
  */
-exports.all = function(req, res) {
-	TodoListEntry.find().exec(function(err, entries) { 
-		if(err) {
-			console.log('Unable to retrieve todo list entry.');
-		}
-		res.send(JSON.stringify(entries));
-	});
+exports.getAllLists = function(req, res) {
+    var user = req.user;
+    TodoListEntry.find({ user: user }).exec(function (err, entries) {
+        if (err) {
+            console.log('Unable to retrieve todo list entry.');
+        }
+        res.send(JSON.stringify(entries));
+    });
 };
 
-exports.create = function(req, res) {
-	var entry = new TodoListEntry(req.body);
+exports.getList = function(req, res) {
+    var user = req.user;
+    var id = req.params.Id;
+    TodoListEntry.findById(id, function (err, entries) {
+        if (err) {
+            console.log('Unable to retrieve todo list entry.');
+        }
+        res.send(JSON.stringify(entries));
+    });
+};
+
+exports.createList = function(req, res) {
+    var user = req.user;
+	var entry = new TodoListEntry({
+        user: user,
+        items: [],
+        title: req.body.title
+        });
 	entry.save(function(err, entry) {
 		if(err) {
 			console.log(err);
@@ -70,13 +106,13 @@ exports.create = function(req, res) {
 	});
 };
 
-exports.update = function(req, res) {
+exports.updateList = function(req, res) {
 	var Id = req.params.Id;
 	var entry = req.body;
 	delete entry._id;
 	TodoListEntry.update({_id: Id}, entry, {safe:true, upsert: true}, function(err, result){
 		if(err) {
-			console.log('Error updating profile. ' + err);
+			console.log('Error updating todo list. ' + err);
 		}
 		else{
 			console.log(result + ' todo list entry updated');
@@ -86,7 +122,7 @@ exports.update = function(req, res) {
 	});
 };
 
-exports.remove = function(req,res) {
+exports.removeList = function(req,res) {
 	var Id = req.params.Id;
 	TodoListEntry.findByIdAndRemove(Id, function(err, entry) {
 	    if (err) {
@@ -94,6 +130,66 @@ exports.remove = function(req,res) {
 	    }
 	    else {
 	        console.log('Todo list entry with Id ' + Id + ' has well been removed from DB');
+	        res.send(JSON.stringify(entry));
+	    }
+	});
+};
+
+/*
+ * REST API Task
+ */
+exports.getTask = function(req, res) {
+    var user = req.user;
+	TaskEntry.find({user: user}).populate('list').exec(function(err, entries) { 
+		if(err) {
+			console.log('Unable to retrieve task entry.');
+		}
+		res.send(JSON.stringify(entries));
+	});
+};
+
+exports.createTask = function(req, res) {
+    var list = req.body.list;
+	var entry = new TaskEntry({
+        list: list,
+        description: req.body.description,
+        importance: req.body.importance
+        });
+	entry.save(function(err, entry) {
+		if(err) {
+			console.log(err);
+	    } 
+		else {
+			console.log('New task entry has been posted.');	
+			res.send(JSON.stringify(entry));
+		}
+	});
+};
+
+exports.updateTask = function(req, res) {
+	var Id = req.params.Id;
+	var entry = req.body;
+	delete entry._id;
+	TaskEntry.update({_id: Id}, entry, {safe:true, upsert: true}, function(err, result){
+		if(err) {
+			console.log('Error updating task. ' + err);
+		}
+		else{
+			console.log(result + ' task entry updated');
+			entry._id = Id;
+			res.send(JSON.stringify(entry));
+		}			
+	});
+};
+
+exports.removeTask = function(req,res) {
+	var Id = req.params.Id;
+	TaskEntry.findByIdAndRemove(Id, function(err, entry) {
+	    if (err) {
+	    	console.log('An error hase occured while trying to delete task entry with Id: ' + Id);
+	    }
+	    else {
+	        console.log('Task entry with Id ' + Id + ' has well been removed from DB');
 	        res.send(JSON.stringify(entry));
 	    }
 	});

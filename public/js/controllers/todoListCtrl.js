@@ -1,6 +1,5 @@
-﻿function listMariageCtrl($scope, $log, $location, mariageEntries) {
+﻿function todoListCtrl($scope, $log, $location, $routeParams,todoLists, tasks) {
 
-    $scope.data = {};
     $scope.isCollapsed = {};
     $scope.buttonText = 'Create';
     $scope.query = "";
@@ -53,78 +52,147 @@
         return x !== undefined;
     }
 
-    $scope.init = function () {
+    function createList() {
         $scope.isCollapsed = true;
-        mariageEntries.query(function (res) {
-            $scope.data.entries = res;
-            for (idx in $scope.data.entries) {
-                if ($scope.data.entries[idx].done) {
+        var newList = new todoLists($scope.newlist);
+        newList.$create(function (list) {
+            if (!list)
+                $log.log('Impossible to create new todoList entry');
+            else {
+                $scope.data.lists.push(list);
+                $location.path('/todoList/home');
+            }
+        });
+    };
+
+    function updateList(list, next) {
+        $scope.isCollapsed = true;
+        var id = list._id;
+        list.$update({ Id: id }, function (list) {
+            if (!list)
+                $log.log('Impossible to update todoList entry');
+            next();
+        });
+    };
+
+    function createTask() {
+        $scope.isCollapsed = true;
+        $scope.newTask.list = $scope.data.list;
+        var newTask = new tasks($scope.newTask);
+        newTask.$create(function (task) {
+            if (!task)
+                $log.log('Impossible to create new task entry');
+            else {
+                $scope.data.list.items.push(task);
+                updateList($scope.data.list, function() {
+                    $location.path('/todoList/home');
+                });
+            }
+        });
+    };
+
+    function updateTask(task, next) {
+        $scope.isCollapsed = true;
+        var id = list._id;
+        task.$update({ Id: id }, function (task) {
+            if (!task)
+                $log.log('Impossible to update task entry');
+            next();
+        });
+    };
+    
+    $scope.initLists = function () {
+        $scope.isCollapsed = true;
+        $scope.data = {};
+        todoLists.query(function (res) {
+            $scope.data.lists = res;
+            /*for (idx in $scope.data.lists) {
+                if ($scope.data.lists[idx].done) {
                     doneEntriesPresent = true;
                     break;
                 }
-            }
+            }*/
             $scope.loaded = true;
             spinner.stop();
         });
     };
 
-    function create() {
-        $scope.isCollapsed = true;
-        var newEntry = new mariageEntries($scope.entry);
-        newEntry.$create(function (entry) {
-            if (!entry)
-                $log.log('Impossible to create new mariage entry');
-            else {
-                $scope.data.entries.push(entry);
-            }
-        });
-    };
-
-    function update(entry) {
-        $scope.isCollapsed = true;
-        var id = entry._id;
-        entry.$update({ Id: id }, function (entry) {
-            if (!entry)
-                $log.log('Impossible to update mariage entry');
-        });
-    };
-
+    $scope.initTasks = function() {
+        var listId = $routeParams.listId;
+        $scope.data = {};
+		todoLists.get({Id: listId}, function(res){
+			$scope.data.list = res;
+		});
+    }
+        
     $scope.action = function () {
         if ($scope.buttonText == 'Create')
-            create();
+            createList();
         else
-            update($scope.entry);
+            updateList($scope.newlist);
     };
 
-
+    $scope.actionTask = function () {
+        if ($scope.buttonText == 'Create')
+            createTask();
+        else
+            updateTask($scope.newtask);
+    };
+    
     $scope.cancel = function () {
         $scope.isCollapsed = true;
-        $location.path('/home');
     };
 
-    $scope.remove = function (entry) {
-        var id = entry._id;
-        entry.$remove({ Id: id }, function (entry) {
-            for (idx in $scope.data.entries) {
-                if ($scope.data.entries[idx] == entry) {
-                    $scope.data.entries.splice(idx, 1);
+    $scope.removeList = function (list) {
+        var id = list._id;
+        list.$remove({ Id: id }, function (list) {
+            for (idx in $scope.data.lists) {
+                if ($scope.data.lists[idx] == list) {
+                    $scope.data.lists.splice(idx, 1);
                 }
             }
         });
     };
 
-    $scope.edit = function (entry, e) {
+    $scope.editList = function (list, e) {
         if (e) {
             e.preventDefault(); //pour empecher que le content soit développé
             e.stopPropagation();
         }
-        $scope.entry = entry;
+        $scope.newlist = list;
         $scope.buttonText = 'Update';
         $scope.isCollapsed = false;
     };
 
-    $scope.showPanel = function () {
-        $scope.entry = {};
+    $scope.removeTask = function (task) {
+        var id = task._id;
+        task.$remove({ Id: id }, function (task) {
+            for (idx in $scope.data.lists) {
+                if ($scope.data.list.items[idx] == task) {
+                    $scope.data.list.items.splice(idx, 1);
+                }
+            }
+        });
+    };
+
+    $scope.editTask = function (task, e) {
+        if (e) {
+            e.preventDefault(); //pour empecher que le content soit développé
+            e.stopPropagation();
+        }
+        $scope.newtask = task;
+        $scope.buttonText = 'Update';
+        $scope.isCollapsed = false;
+    };
+
+    $scope.showNewListPanel = function () {
+        $scope.newlist = {};
+        $scope.buttonText = 'Create';
+        $scope.isCollapsed = false;
+    };
+
+    $scope.showNewTaskPanel = function () {
+        $scope.newtask = {};
         $scope.buttonText = 'Create';
         $scope.isCollapsed = false;
     };
@@ -134,7 +202,7 @@
         item.done = !item.done;
         item.$update({ Id: id }, function (entry) {
             if (!entry)
-                $log.log('Impossible to update mariage entry');
+                $log.log('Impossible to update todoList entry');
         });   	
     };
 }

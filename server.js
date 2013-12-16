@@ -33,6 +33,7 @@ mongoose.connect(uristring, mongoOptions, function (err, res) {
 app.configure(function () {
     this.set('views', path.join(__dirname + '/views'));
     this.set('view engine', 'jade');
+    this.set('view options', { layout: false });
     this.use(express.logger('dev'));
     this.use(express.cookieParser());
     this.use(express.bodyParser());
@@ -75,8 +76,11 @@ app.configure(function() {
 /********************** 
  *     Basic pages    *
  *********************/
-app.get('/', pass.ensureAuthenticated, routes.home);
-app.get('/home', pass.ensureAuthenticated, routes.home);
+app.get('/', pass.ensureAuthenticated, routes.todoList);
+app.get('/todoList', pass.ensureAuthenticated, routes.todoList);
+app.get('/todoList/home', pass.ensureAuthenticated, routes.home);
+app.get('/todoList/details', pass.ensureAuthenticated, routes.details);
+
 
 /**********************
  *   Login/out pages  *
@@ -90,10 +94,15 @@ app.get('/auth/google/return', routes.googleReturn);
 /****************
  *   API REST   *
  ***************/
-//app.get('/api/listeMariage', pass.ensureAuthenticated, routes.all);
-//app.post('/api/listeMariage', pass.ensureAuthenticated, routes.create);
-//app.del('/api/listeMariage/:Id', pass.ensureAuthenticated, routes.remove);
-//app.post('/api/listeMariage/:Id', pass.ensureAuthenticated, routes.update);
+app.get('/api/todoList', pass.ensureAuthenticated, routes.getAllLists);
+app.get('/api/todoList/:Id', pass.ensureAuthenticated, routes.getList);
+app.post('/api/todoList', pass.ensureAuthenticated, routes.createList);
+app.del('/api/todoList/:Id', pass.ensureAuthenticated, routes.removeList);
+app.post('/api/todoList/:Id', pass.ensureAuthenticated, routes.updateList);
+app.get('/api/task/:Id', pass.ensureAuthenticated, routes.getTask);
+app.post('/api/task', pass.ensureAuthenticated, routes.createTask);
+app.del('/api/task/:Id', pass.ensureAuthenticated, routes.removeTask);
+app.post('/api/task/:Id', pass.ensureAuthenticated, routes.updateTask);
 
 
 app.listen(port, function() {

@@ -1,0 +1,43 @@
+﻿div.container-fluid.wrapper(ng-init="initTasks()")
+        div.row-fluid         
+           div.offset2.span9
+              div.row-fluid   
+                 button.btn.btn-primary(ng-click="showNewTaskPanel();") Nouvelle tâche              
+              div(collapse="isCollapsed")
+                  div.span8.offset1.backlogPanel
+                    form.formLog
+                       textarea.input-block-level(rows = 3, placeholder='Description de tâche', ng-model="newTask.description")
+                       select.input-block-level.optional(ng-model="newTask.importance")
+                          option(value="", disabled, selected) Importance
+                          option 1
+                          option 2
+                          option 3
+                       div.btn-toolbar
+                          button.btn.btn-primary(ng-click="actionTask()") {{buttonText}}
+                          button.btn(ng-click="cancel()") Cancel
+              div.searchInput
+                 form.form-search
+                    span Tri par importance : 
+                    input.input-mini.search-query(type="text", ng-model="query") 
+              div.span12                    
+                 div.accordion.span8.offset1#accordionLog
+                    div.accordion-group(ng-repeat="item in data.list.items | filter:searchNotDone | orderBy:importance")
+                       img.backlogCheckBox.pull-right(ng-src="{{item.done && '/img/OkGreen.png' || '/img/OkBlack.png'}}", ng-click="chgState(item)", ng-model="item.done")
+                       a.btn.btn-mini.btn-danger.pull-right.buttonLog(ng:click="removeTask(item)") X
+                       a.btn.btn-mini.btn-info.pull-right.buttonLog(ng:click="editTask(item,$event)") ...                       
+                       div.accordion-heading(ng-style="{backgroundColor: styles[item.importance-1].bkcolor, color: styles[item.importance-1].color}")                          
+                          a.accordion-toogle(ng-style="{backgroundColor: styles[item.importance-1].bkcolor, color: styles[item.importance-1].color}", data-toggle="collapse", data-parent="#accordionLog", href="#collapse{{$index + 1}}") ({{item.importance}}) {{item.title}}                      
+                       div.accordion-body.collapse(id="collapse{{$index+1}}")
+                          div.accordion-inner                             
+                             p {{item.description}}
+              div.span12 
+                 div.accordion.span8.offset1#accordionLog2
+                    div.accordion-group(ng-repeat="item in data.list.items | filter:searchDone | orderBy:importance")
+                       img.backlogCheckBox.pull-right(ng-src="{{item.done && '/img/OkGreen.png' || '/img/OkBlack.png'}}", ng-click="chgState(item)")
+                       a.btn.btn-mini.btn-danger.pull-right.buttonLog(ng:click="removeTask(item)") X
+                       a.btn.btn-mini.btn-info.pull-right.buttonLog(ng:click="editTask(item,$event)") ...                       
+                       div.accordion-heading                          
+                          a.accordion-toogle(data-toggle="collapse", data-parent="#accordionLog2", href="#collapse{{$index + 1}}") ({{item.importance}}) {{item.title}}                      
+                       div.accordion-body.collapse(id="collapse{{$index+1}}")
+                          div.accordion-inner                             
+                             p {{item.description}}                

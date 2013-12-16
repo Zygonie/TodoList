@@ -1,0 +1,18 @@
+﻿div.container-fluid.wrapper#spinner(ng-init="initLists()", ng-hide="loaded")
+div.row-fluid(ng-show="loaded")          
+   div.offset1.span10
+      div.row-fluid   
+         button.btn.btn-primary(ng-click="showNewListPanel();") Nouvelle Liste              
+      div(collapse="isCollapsed")
+          div.span8.offset1.newTodoListPanel
+            form.formNewList
+               input.input-block-level(type='text', placeholder='Title', ng-model="newlist.title")
+               div.btn-toolbar
+                  button.btn.btn-primary(ng-click="action()") {{buttonText}}
+                  button.btn(ng-click="cancel()") Cancel 
+      div.row-fluid.wrapperList
+         div.listItem(ng-repeat="item in data.lists")
+            a.listTitle(href="/todoList/details/{{item._id}}") {{item.title}}
+              div.btn-toolbar.buttonListToolbar(role="toolbar")
+                button.btn.btn-mini.btn-danger.pull-right.buttonList(ng:click="removeList(item)") X
+                button.btn.btn-mini.btn-info.pull-right.buttonList(ng:click="editList(item,$event)") ...

@@ -1,29 +1,28 @@
 ﻿!!! 5
 html
    head
-      title TODO List
+      title SmartTodoList
+      link(rel="stylesheet", href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap.min.css")
+      link(type="text/css", href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css")
+      link(rel="shortcut icon", href="https://github.com/twitter/bootstrap/tree/master/docs/assets/ico/favicon.png")
+      link(rel="stylesheet", href="/css/signin.css")
+      link(rel="stylesheet", href="/css/social-buttons.css")
+      link(rel="stylesheet", href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css")
+      script(src="http://codeorigin.jquery.com/jquery-2.0.3.min.js")
+      script(src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js")
 
-link(rel="stylesheet", href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap.min.css")
-link(type="text/css", href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css")
-link(rel="shortcut icon", href="https://github.com/twitter/bootstrap/tree/master/docs/assets/ico/favicon.png")
-link(rel="stylesheet", href="/css/signin.css")
-link(rel="stylesheet", href="/css/social-buttons.css")
-link(rel="stylesheet", href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css")
-script(src="http://codeorigin.jquery.com/jquery-2.0.3.min.js")
-script(src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js")
-
-body
-   div.container-fluid
-      form.form-signin( method="post" )
-         div.row-fluid
-            button.btn-large.btn-google-plus( onclick="window.location.href='/auth/google';return false;")
-               i.icon-google-plus
-               |  |
-               span.petit Connect with Google+
-         div.vBar
-         h2.form-signin-heading OR
-         div.vBar
-         input.input-block-level( type="email", name="email", placeholder="Email address")
-         input.input-block-level( type="password", name="password", placeholder="Password")
-         div.btn-toolbar
-            button.btn.btn-large.btn-primary(type='submit') Sign in
+   body
+      div.container-fluid
+         form.form-signin( method="post" )
+            div.row-fluid
+               button.btn.btn-large.btn-google-plus( onclick="window.location.href='/auth/google';return false;")
+                  i.icon-google-plus
+                  |  |
+                  span.petit Connect with Google+
+            div.vBar
+            h2.form-signin-heading OR
+            div.vBar
+            input.input-block-level( type="email", name="email", placeholder="Email address")
+            input.input-block-level( type="password", name="password", placeholder="Password")
+            div.btn-toolbar
+               button.btn.btn-large.btn-primary(type='submit') Sign in

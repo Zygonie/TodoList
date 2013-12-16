@@ -32,13 +32,21 @@
     <Compile Include="config.js" />
     <Compile Include="controllers\passport.js" />
     <Compile Include="controllers\routes.js" />
+    <Compile Include="controllers\taskModel.js" />
     <Compile Include="controllers\todoListModel.js" />
     <Compile Include="controllers\userModel.js" />
     <Compile Include="public\js\app\appTodoList.js" />
     <Compile Include="public\js\controllers\todoListCtrl.js" />
     <Compile Include="public\js\controllers\navBarCtrl.js" />
+    <Compile Include="public\js\lib\angular-resource.min.js" />
+    <Compile Include="public\js\lib\angular.min.js" />
+    <Compile Include="public\js\lib\bootstrap.js" />
+    <Compile Include="public\js\lib\jquery-2.0.3.js" />
     <Compile Include="public\js\lib\jquery-ui-1.10.3.custom.js" />
     <Compile Include="public\js\lib\jquery-ui-1.10.3.custom.min.js" />
+    <Compile Include="public\js\lib\jquery.dotdotdot.js" />
+    <Compile Include="public\js\lib\jquery.dotdotdot.min.js" />
+    <Compile Include="public\js\lib\ng-grid-2.0.7.min.js" />
     <Compile Include="public\js\lib\spin.min.js" />
     <Compile Include="public\js\lib\ui-bootstrap-tpls.js" />
     <Compile Include="public\js\lib\ui-bootstrap.js" />
@@ -49,7 +57,7 @@
     <Content Include="Procfile" />
     <Content Include="public\css\bootstrap-responsive.css" />
     <Content Include="public\css\bootstrap.css" />
-    <Content Include="public\css\index.css" />
+    <Content Include="public\css\jquery-ui-1.10.3.custom.min.css" />
     <Content Include="public\css\signin.css" />
     <Content Include="public\css\todoList.css" />
     <Content Include="public\css\social-buttons.css" />
@@ -58,7 +66,9 @@
     <Content Include="public\img\OkBlack.png" />
     <Content Include="public\img\OkGreen.png" />
     <Content Include="README.md" />
-    <Content Include="views\layout.jade" />
+    <Content Include="views\partials\details.jade" />
+    <Content Include="views\partials\home.jade" />
+    <Content Include="views\index.jade" />
     <Content Include="views\signin.jade" />
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +81,7 @@
     <Folder Include="public\js\controllers\" />
     <Folder Include="public\js\lib\" />
     <Folder Include="views\" />
+    <Folder Include="views\partials\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
   <ProjectExtensions>

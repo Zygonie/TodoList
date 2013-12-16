@@ -111,7 +111,7 @@ passport.use(new GoogleStrategy({
     User.findOne({ idFromProvider: profile.id }, function(err, olduser) {
         if (err) { return done(err); }
         if (olduser) { 
-            console.log('User: ' + newuser.email + " has logged in.");
+            console.log('User: ' + olduser.email + " has logged in.");
             return done(null, olduser); 
         }
         else{

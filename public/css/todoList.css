@@ -39,7 +39,7 @@
 }
 
 .wrapper {
-    margin-top: 50px;
+    margin-top: 70px;
 }
 
 
@@ -53,7 +53,6 @@
 
 .accordion-heading {
     padding: 5px 15px;
-    background-color: #311c98;
     color: white;
 }
 
@@ -67,8 +66,7 @@
 }
 
 .accordion-heading a {
-    background-color: #311c98;
-    color: white;
+    color: black;
 }
 
 .headDone{
@@ -85,10 +83,6 @@
    border-top: 0px;
 }
 
-.accordion-body {
-   background-color: #D9D9D9;
-}
-
 .accordion-body p {
    font-size: 14px;
    line-height: 18px;
@@ -103,8 +97,8 @@
 }
 
 .navbar-inverse .nav .active>a, .navbar-inverse .nav .active>a:hover, .navbar-inverse .nav .active>a:focus {
-    color: #222222 !important;
-    background-color: #bbbbbb !important;
+    color: #222222 !important; /*e6e6e6*/
+    background-color: #bbbbbb !important; /*5c5c5c*/
 }
 
 .navbar-inverse .navbar-inner {
@@ -116,4 +110,59 @@
 
 .navbar-inverse .brand {
     color: #D9D9D9;
+}
+  
+.btn-toolbar {
+   margin-top: 0px;
+   margin-bottom: 0px;  
+}
+
+.newTodoListPanel {
+    margin-top: 20px;
+    margin-bottom: 50px;
+    padding: 10px;
+    border: 1px solid;
+    border-color: #5F5F5F;
+}
+
+.formNewList {
+    margin: 0px;
+}
+
+.listItem {
+    width: 18%;
+    height: 100px;
+    margin-top: 20px;
+    margin-left: 3%;
+    margin-right: 3%;
+    border: 1px solid #5F5F5F;
+    display:inline-block;
+}
+
+.wrapperList {
+    margin-top: 30px;
+}
+
+.listTitle {
+    color: black;
+    height: 100%;
+    width: 100%;
+    display:block;
+    text-decoration: none;
+    text-indent: 5px;
+}
+
+.listTitle:hover {
+    color: black;
+    background-color: #808080;
+    cursor: pointer;
+}
+
+.buttonList {
+    margin-right: 2px;
+}
+
+.buttonListToolbar {
+    margin-top: 55px;
+    bottom: 0;
 }

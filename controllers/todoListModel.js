@@ -1,20 +1,15 @@
-/**
- * Backlog entry Schema
+/*
+ * Todo List Schema
  */
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
 
-//Profile schema
+// Schema
 var todoListSchema = new Schema({	
 	title: { type: String, required: true },
-    items: [{
-        description: { type: String },
-        importance: { type: Number, required: true },
-        postedDate: { type: Date, default: Date.now },
-        done: {type: Boolean, default: false}
-        }],    
+    items: [ { type : Schema.ObjectId, ref : 'Task' } ],    
     user: { type : Schema.ObjectId, ref : 'User', required: true }
 });
 
-// Export profile model
+// Export model
 exports.todoListModel = mongoose.model('TodoList', todoListSchema);
