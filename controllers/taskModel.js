@@ -9,8 +9,7 @@ var taskSchema = new Schema({
     description: { type: String },
     importance: { type: Number, required: true },
     postedDate: { type: Date, default: Date.now },
-    done: {type: Boolean, default: false},
-    list: { type : Schema.ObjectId, ref : 'TodoList', required: true }
+    done: {type: Boolean, default: false}
 });
 
 // Export model

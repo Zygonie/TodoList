@@ -67,25 +67,25 @@ exports.googleReturn = passport.authenticate('google', { successRedirect: '/todo
 /*
  * REST API Todo List
  */
-exports.getAllLists = function(req, res) {
-    var user = req.user;
-    TodoListEntry.find({ user: user }).exec(function (err, entries) {
-        if (err) {
-            console.log('Unable to retrieve todo list entry.');
-        }
-        res.send(JSON.stringify(entries));
-    });
-};
-
 exports.getList = function(req, res) {
     var user = req.user;
     var id = req.params.Id;
-    TodoListEntry.findById(id, function (err, entries) {
-        if (err) {
-            console.log('Unable to retrieve todo list entry.');
-        }
-        res.send(JSON.stringify(entries));
-    });
+    if (id) {
+        TodoListEntry.findById(id).populate('items').exec(function (err, entries) {
+            if (err) {
+                console.log('Unable to retrieve todo list entry.');
+            }
+            res.send(JSON.stringify(entries));
+        });
+    }
+    else {
+        TodoListEntry.find({ user: user }).populate('items').exec(function (err, entries) {
+            if (err) {
+                console.log('Unable to retrieve todo list entry.');
+            }
+            res.send(JSON.stringify(entries));
+        });
+    }
 };
 
 exports.createList = function(req, res) {
@@ -122,6 +122,20 @@ exports.updateList = function(req, res) {
 	});
 };
 
+exports.addTaskToList = function(req, res) {
+	var listId = req.params.Id;
+    var taskId = req.params.TaskId;
+	TodoListEntry.update({_id: listId}, {$push: {items: taskId}}, {safe:true, upsert: true}, function(err, result){
+		if(err) {
+			console.log('Error updating todo list. ' + err);
+		}
+		else{
+			console.log(result + ' todo list entry updated - New task added');
+            res.send(JSON.stringify(err)); 
+		}			
+	});
+};
+
 exports.removeList = function(req,res) {
 	var Id = req.params.Id;
 	TodoListEntry.findByIdAndRemove(Id, function(err, entry) {
@@ -140,7 +154,7 @@ exports.removeList = function(req,res) {
  */
 exports.getTask = function(req, res) {
     var user = req.user;
-	TaskEntry.find({user: user}).populate('list').exec(function(err, entries) { 
+	TaskEntry.find({user: user}).exec(function(err, entries) { 
 		if(err) {
 			console.log('Unable to retrieve task entry.');
 		}
@@ -149,9 +163,7 @@ exports.getTask = function(req, res) {
 };
 
 exports.createTask = function(req, res) {
-    var list = req.body.list;
 	var entry = new TaskEntry({
-        list: list,
         description: req.body.description,
         importance: req.body.importance
         });

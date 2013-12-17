@@ -80,6 +80,7 @@ app.get('/', pass.ensureAuthenticated, routes.todoList);
 app.get('/todoList', pass.ensureAuthenticated, routes.todoList);
 app.get('/todoList/home', pass.ensureAuthenticated, routes.home);
 app.get('/todoList/details', pass.ensureAuthenticated, routes.details);
+app.get('/todoList/details/:listId', pass.ensureAuthenticated, routes.details);
 
 
 /**********************
@@ -94,11 +95,12 @@ app.get('/auth/google/return', routes.googleReturn);
 /****************
  *   API REST   *
  ***************/
-app.get('/api/todoList', pass.ensureAuthenticated, routes.getAllLists);
-app.get('/api/todoList/:Id', pass.ensureAuthenticated, routes.getList);
+app.get('/api/todoList/:Id?', pass.ensureAuthenticated, routes.getList); //The ? indicates an optional parameter
 app.post('/api/todoList', pass.ensureAuthenticated, routes.createList);
+app.post('/api/todoList/:Id/:TaskId', pass.ensureAuthenticated, routes.addTaskToList);
 app.del('/api/todoList/:Id', pass.ensureAuthenticated, routes.removeList);
 app.post('/api/todoList/:Id', pass.ensureAuthenticated, routes.updateList);
+
 app.get('/api/task/:Id', pass.ensureAuthenticated, routes.getTask);
 app.post('/api/task', pass.ensureAuthenticated, routes.createTask);
 app.del('/api/task/:Id', pass.ensureAuthenticated, routes.removeTask);

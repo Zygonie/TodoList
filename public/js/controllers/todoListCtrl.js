@@ -1,4 +1,4 @@
-﻿function todoListCtrl($scope, $log, $location, $routeParams,todoLists, tasks) {
+﻿function todoListCtrl($scope, $log, $location, $route, $routeParams, todoLists, tasks, sharedService) {
 
     $scope.isCollapsed = {};
     $scope.buttonText = 'Create';
@@ -6,6 +6,8 @@
     $scope.loaded = false;
     $scope.doneEntriesPresent = false;
     $scope.formOn = false;
+    $scope.tasksPresent = false;
+    $scope.doneTasksPresent = false;
 
     //Spinner
     var opts = {
@@ -76,16 +78,23 @@
     };
 
     function createTask() {
-        $scope.isCollapsed = true;
-        $scope.newTask.list = $scope.data.list;
+        $scope.isCollapsed = true;;
         var newTask = new tasks($scope.newTask);
         newTask.$create(function (task) {
             if (!task)
                 $log.log('Impossible to create new task entry');
             else {
-                $scope.data.list.items.push(task);
-                updateList($scope.data.list, function() {
-                    $location.path('/todoList/home');
+                var list = $scope.data.list;                
+                list.$addtask({Id: list._id, TaskId: task._id}, function(err) {
+                    if (!err) { 
+                        $log.log('An error occured during list updating'); 
+                    }
+                    else { 
+                        todoLists.get({'Id': list._id}, function(updatedList) {
+                            sharedService.data.list = updatedList;
+                            $route.reload();
+                        });
+                    }
                 });
             }
         });
@@ -94,7 +103,7 @@
     function updateTask(task, next) {
         $scope.isCollapsed = true;
         var id = list._id;
-        task.$update({ Id: id }, function (task) {
+        task.update({ Id: id }, function (task) {
             if (!task)
                 $log.log('Impossible to update task entry');
             next();
@@ -102,10 +111,10 @@
     };
     
     $scope.initLists = function () {
+        $scope.data = sharedService.data;
         $scope.isCollapsed = true;
-        $scope.data = {};
         todoLists.query(function (res) {
-            $scope.data.lists = res;
+            $scope.data.lists = res;            
             /*for (idx in $scope.data.lists) {
                 if ($scope.data.lists[idx].done) {
                     doneEntriesPresent = true;
@@ -117,14 +126,20 @@
         });
     };
 
-    $scope.initTasks = function() {
-        var listId = $routeParams.listId;
-        $scope.data = {};
-		todoLists.get({Id: listId}, function(res){
-			$scope.data.list = res;
-		});
+    $scope.showDetails = function(listItem)
+    {
+        $scope.data.list = listItem;
+        $location.path('/todoList/details');
+    };
+
+    $scope.initTasks = function () {
+        $scope.data = sharedService.data;
+        if($scope.data.list.items.length > 0) { $scope.tasksPresent = true; }
+        for (idx in $scope.data.list.items) {
+            if ($scope.data.list.items[idx].done) { $scope.doneTasksPresent = true; }
+        }
     }
-        
+
     $scope.action = function () {
         if ($scope.buttonText == 'Create')
             createList();
@@ -143,7 +158,11 @@
         $scope.isCollapsed = true;
     };
 
-    $scope.removeList = function (list) {
+    $scope.removeList = function (list,e) {
+        if (e) {
+            e.preventDefault(); //pour empecher que le content soit développé
+            e.stopPropagation();
+        }
         var id = list._id;
         list.$remove({ Id: id }, function (list) {
             for (idx in $scope.data.lists) {

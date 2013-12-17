@@ -19,7 +19,7 @@ todoListApp.config(['$routeProvider','$locationProvider', function($routeProvide
 		   templateUrl: '/todoList/home',
 		   reloadOnSearch: false
 	   })
-	   .when('/todoList/details/:listId', {
+       .when('/todoList/details', {
 		   controller: 'todoListCtrl',
 		   templateUrl: '/todoList/details',
 		   reloadOnSearch: false
@@ -29,30 +29,26 @@ todoListApp.config(['$routeProvider','$locationProvider', function($routeProvide
 }]);
 
 /*
- * Services
+ * Service TodoList
  */
 todoListApp.factory('todoLists',['$resource', function($resource) {
-	return $resource('/api/todoList/:Id',
-			{ Id: '@Id' },
+	return $resource('/api/todoList/:Id/:TaskId',
+			{ Id: '@Id', TaskId: '@TaskId' },
 			{
-				query:{
-					method: 'GET', 
-					isArray: true
-					},
 				create: {
 				    	method: 'POST'
 				    },
 				update: {
 				    	method: 'POST'
-				    },    
-				remove: {
-				    	method: 'DELETE'
-				    }
+				    }, 
+                addtask: {
+                    method: 'POST'
+                    }
 			});
 }]);
 
 /*
- * Services
+ * Service Task
  */
 todoListApp.factory('tasks',['$resource', function($resource) {
 	return $resource('/api/task/:Id',
@@ -73,6 +69,17 @@ todoListApp.factory('tasks',['$resource', function($resource) {
 				    }
 			});
 }]);
+
+/*
+ * Shared Service
+ */
+todoListApp.factory('sharedService', function($rootScope) {
+    var sharedService = {};
+    
+    sharedService.data = {};
+
+    return sharedService;
+});
 
 /*
  * Directive Datepicker

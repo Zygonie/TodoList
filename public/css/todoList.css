@@ -90,6 +90,12 @@
    padding-right: 120px;
 }
 
+.accordion .checkBox {
+   margin-right: -25px;
+   margin-top: 5px;
+   height: 20px;
+}
+
 .searchInput {
    clear: both;
    margin-top: 10px;

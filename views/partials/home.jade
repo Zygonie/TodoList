@@ -12,7 +12,7 @@ div.row-fluid(ng-show="loaded")
                   button.btn(ng-click="cancel()") Cancel 
       div.row-fluid.wrapperList
          div.listItem(ng-repeat="item in data.lists")
-            a.listTitle(href="/todoList/details/{{item._id}}") {{item.title}}
+            a.listTitle(ng:click="showDetails(item)") {{item.title}}
               div.btn-toolbar.buttonListToolbar(role="toolbar")
                 button.btn.btn-mini.btn-danger.pull-right.buttonList(ng:click="removeList(item)") X
                 button.btn.btn-mini.btn-info.pull-right.buttonList(ng:click="editList(item,$event)") ...
