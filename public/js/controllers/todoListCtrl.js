@@ -84,17 +84,13 @@
             if (!task)
                 $log.log('Impossible to create new task entry');
             else {
-                var list = $scope.data.list;                
-                list.$addtask({Id: list._id, TaskId: task._id}, function(err) {
-                    if (!err) { 
-                        $log.log('An error occured during list updating'); 
-                    }
-                    else { 
-                        todoLists.get({'Id': list._id}, function(updatedList) {
-                            sharedService.data.list = updatedList;
-                            $route.reload();
-                        });
-                    }
+                $scope.data.list.$addtask({ Id: sharedService.data.list._id, TaskId: task._id },
+                    function (list) { //success
+                        sharedService.data.list = list;
+                        $scope.newTask = {};
+                    },
+                    function (list) { //error
+                        $scope.newTask = {};
                 });
             }
         });

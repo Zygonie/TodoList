@@ -130,8 +130,13 @@ exports.addTaskToList = function(req, res) {
 			console.log('Error updating todo list. ' + err);
 		}
 		else{
-			console.log(result + ' todo list entry updated - New task added');
-            res.send(JSON.stringify(err)); 
+		    console.log(result + ' todo list entry updated - New task added');
+		    TodoListEntry.findById(listId).populate('items').exec(function (err, updatedEntry) {
+		        if (err) {
+		            console.log('Unable to retrieve todo list entry.');
+		        }
+		        res.send(JSON.stringify(updatedEntry));
+		    });
 		}			
 	});
 };
