@@ -74,6 +74,8 @@ exports.getList = function(req, res) {
         TodoListEntry.findById(id).populate('items').exec(function (err, entries) {
             if (err) {
                 console.log('Unable to retrieve todo list entry.');
+                console.log(err);
+                res.send(err);
             }
             res.send(JSON.stringify(entries));
         });
@@ -82,6 +84,8 @@ exports.getList = function(req, res) {
         TodoListEntry.find({ user: user }).populate('items').exec(function (err, entries) {
             if (err) {
                 console.log('Unable to retrieve todo list entry.');
+                console.log(err);
+                res.send(err);
             }
             res.send(JSON.stringify(entries));
         });
@@ -98,6 +102,7 @@ exports.createList = function(req, res) {
 	entry.save(function(err, entry) {
 		if(err) {
 			console.log(err);
+            res.send(err);
 	    } 
 		else {
 			console.log('New todo list entry has been posted.');	
@@ -113,6 +118,8 @@ exports.updateList = function(req, res) {
 	TodoListEntry.update({_id: Id}, entry, {safe:true, upsert: true}, function(err, result){
 		if(err) {
 			console.log('Error updating todo list. ' + err);
+            console.log(err);
+            res.send(err);
 		}
 		else{
 			console.log(result + ' todo list entry updated');
@@ -128,12 +135,15 @@ exports.addTaskToList = function(req, res) {
 	TodoListEntry.update({_id: listId}, {$push: {items: taskId}}, {safe:true, upsert: true}, function(err, result){
 		if(err) {
 			console.log('Error updating todo list. ' + err);
+            console.log(err);
+            res.send(err); 
 		}
 		else{
 		    console.log(result + ' todo list entry updated - New task added');
 		    TodoListEntry.findById(listId).populate('items').exec(function (err, updatedEntry) {
 		        if (err) {
 		            console.log('Unable to retrieve todo list entry.');
+		            res.send(err);
 		        }
 		        res.send(JSON.stringify(updatedEntry));
 		    });
@@ -146,6 +156,8 @@ exports.removeList = function(req,res) {
 	TodoListEntry.findByIdAndRemove(Id, function(err, entry) {
 	    if (err) {
 	    	console.log('An error hase occured while trying to delete todo list entry with Id: ' + Id);
+            console.log(err);
+            res.send(err);
 	    }
 	    else {
 	        console.log('Todo list entry with Id ' + Id + ' has well been removed from DB');
@@ -162,6 +174,8 @@ exports.getTask = function(req, res) {
 	TaskEntry.find({user: user}).exec(function(err, entries) { 
 		if(err) {
 			console.log('Unable to retrieve task entry.');
+            console.log(err);
+            res.send(err);
 		}
 		res.send(JSON.stringify(entries));
 	});
@@ -175,6 +189,7 @@ exports.createTask = function(req, res) {
 	entry.save(function(err, entry) {
 		if(err) {
 			console.log(err);
+            res.send(err);
 	    } 
 		else {
 			console.log('New task entry has been posted.');	
@@ -190,6 +205,8 @@ exports.updateTask = function(req, res) {
 	TaskEntry.update({_id: Id}, entry, {safe:true, upsert: true}, function(err, result){
 		if(err) {
 			console.log('Error updating task. ' + err);
+            console.log(err);
+            res.send(err);
 		}
 		else{
 			console.log(result + ' task entry updated');
@@ -204,6 +221,8 @@ exports.removeTask = function(req,res) {
 	TaskEntry.findByIdAndRemove(Id, function(err, entry) {
 	    if (err) {
 	    	console.log('An error hase occured while trying to delete task entry with Id: ' + Id);
+            console.log(err);
+            res.send(err);
 	    }
 	    else {
 	        console.log('Task entry with Id ' + Id + ' has well been removed from DB');

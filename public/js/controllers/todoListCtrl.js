@@ -57,69 +57,78 @@
     function createList() {
         $scope.isCollapsed = true;
         var newList = new todoLists($scope.newlist);
-        newList.$create(function (list) {
-            if (!list)
-                $log.log('Impossible to create new todoList entry');
-            else {
-                $scope.data.lists.push(list);
-                $location.path('/todoList/home');
-            }
-        });
+        newList.$create(
+            function (list) { //success
+                if (!list)
+                    $log.log('Impossible to create new todoList entry');
+                else {
+                    $scope.data.lists.push(list);
+                    $location.path('/todoList/home');
+                }
+            },
+            function (err) { //error
+            });
     };
 
     function updateList(list, next) {
         $scope.isCollapsed = true;
         var id = list._id;
-        list.$update({ Id: id }, function (list) {
-            if (!list)
-                $log.log('Impossible to update todoList entry');
-            next();
-        });
+        list.$update({ Id: id }, 
+            function (list) { //success
+                if (!list)
+                    $log.log('Impossible to update todoList entry');
+                next();
+            },
+            function (err) { //error
+            });
     };
 
     function createTask() {
         $scope.isCollapsed = true;;
         var newTask = new tasks($scope.newTask);
-        newTask.$create(function (task) {
-            if (!task)
-                $log.log('Impossible to create new task entry');
-            else {
-                $scope.data.list.$addtask({ Id: sharedService.data.list._id, TaskId: task._id },
-                    function (list) { //success
-                        sharedService.data.list = list;
-                        $scope.newTask = {};
-                    },
-                    function (list) { //error
-                        $scope.newTask = {};
-                });
-            }
-        });
+        newTask.$create(
+            function (task) { //success
+                if (!task)
+                    $log.log('Impossible to create new task entry');
+                else {
+                    $scope.data.list.$addtask({ Id: sharedService.data.list._id, TaskId: task._id },
+                        function (list) { //success
+                            sharedService.data.list = list;
+                            $scope.newTask = {};
+                        },
+                        function (list) { //error
+                            $scope.newTask = {};
+                        });
+                }
+            },
+            function (err) { //error
+            });
     };
 
     function updateTask(task, next) {
         $scope.isCollapsed = true;
         var id = list._id;
-        task.update({ Id: id }, function (task) {
-            if (!task)
-                $log.log('Impossible to update task entry');
-            next();
-        });
+        task.update({ Id: id }, 
+            function (task) { //success
+                if (!task)
+                    $log.log('Impossible to update task entry');
+                next();
+            },
+            function (err) { //error
+            });
     };
     
     $scope.initLists = function () {
         $scope.data = sharedService.data;
         $scope.isCollapsed = true;
-        todoLists.query(function (res) {
-            $scope.data.lists = res;            
-            /*for (idx in $scope.data.lists) {
-                if ($scope.data.lists[idx].done) {
-                    doneEntriesPresent = true;
-                    break;
-                }
-            }*/
-            $scope.loaded = true;
-            spinner.stop();
-        });
+        todoLists.query(
+            function (res) { //success
+                $scope.data.lists = res;
+                $scope.loaded = true;
+                spinner.stop();
+            },
+            function (err) { //error
+            });
     };
 
     $scope.showDetails = function(listItem)
@@ -160,13 +169,16 @@
             e.stopPropagation();
         }
         var id = list._id;
-        list.$remove({ Id: id }, function (list) {
-            for (idx in $scope.data.lists) {
-                if ($scope.data.lists[idx] == list) {
-                    $scope.data.lists.splice(idx, 1);
+        list.$remove({ Id: id },
+            function (list) { //success
+                for (idx in $scope.data.lists) {
+                    if ($scope.data.lists[idx] == list) {
+                        $scope.data.lists.splice(idx, 1);
+                    }
                 }
-            }
-        });
+            },
+            function (err) { //error
+            });
     };
 
     $scope.editList = function (list, e) {
@@ -181,13 +193,16 @@
 
     $scope.removeTask = function (task) {
         var id = task._id;
-        task.$remove({ Id: id }, function (task) {
-            for (idx in $scope.data.lists) {
-                if ($scope.data.list.items[idx] == task) {
-                    $scope.data.list.items.splice(idx, 1);
+        task.$remove({ Id: id }, 
+            function (task) { //success
+                for (idx in $scope.data.lists) {
+                    if ($scope.data.list.items[idx] == task) {
+                        $scope.data.list.items.splice(idx, 1);
+                    }
                 }
-            }
-        });
+            },
+            function (err) { //error
+            });
     };
 
     $scope.editTask = function (task, e) {
@@ -215,9 +230,12 @@
     $scope.chgState = function (item) {
         var id = item._id;
         item.done = !item.done;
-        item.$update({ Id: id }, function (entry) {
-            if (!entry)
-                $log.log('Impossible to update todoList entry');
-        });   	
+        item.$update({ Id: id },
+            function (entry) { //success
+                if (!entry)
+                    $log.log('Impossible to update todoList entry');
+            },
+            function (err) { //error
+            });
     };
 }
