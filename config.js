@@ -1,12 +1,14 @@
-﻿var development = {
+﻿var port = process.env.PORT || 8080;
+
+var development = {
     facebook: {
         CallbackURL: "",
         clientID: "",
         clientSecret: ""
     },  
     google: {
-        returnURL: 'http://localhost:8080/auth/google/return',
-        realm: 'http://localhost:8080/'
+        returnURL: 'http://localhost:'+ port +'/auth/google/return',
+        realm: 'http://localhost:' + port + '/'
         },
     env : global.process.env.NODE_ENV || 'development'
 };

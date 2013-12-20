@@ -86,7 +86,7 @@
     function createTask() {
         $scope.isCollapsed = true;;
         var newTask = new tasks($scope.newTask);
-        newTask.$create(
+        newTask.$create( //TODO deplacer la creation d'une tache en backend pour eviter des erreurs ici avec Angular. Appeler directement addtask ou on cree la tache puis on l'ajoute.
             function (task) { //success
                 if (!task)
                     $log.log('Impossible to create new task entry');
@@ -104,6 +104,14 @@
             function (err) { //error
             });
     };
+
+    //function createTask() {
+    //    tasks.$create({newTask: $scope.newTask},
+    //        function (task) {
+    //            sharedService.data.list = list;
+    //            }, 
+    //        function(err) {});
+    //    };
 
     function updateTask(task, next) {
         $scope.isCollapsed = true;

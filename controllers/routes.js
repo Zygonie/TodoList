@@ -132,23 +132,44 @@ exports.updateList = function(req, res) {
 exports.addTaskToList = function(req, res) {
 	var listId = req.params.Id;
     var taskId = req.params.TaskId;
-	TodoListEntry.update({_id: listId}, {$push: {items: taskId}}, {safe:true, upsert: true}, function(err, result){
-		if(err) {
-			console.log('Error updating todo list. ' + err);
-            console.log(err);
-            res.send(err); 
-		}
-		else{
-		    console.log(result + ' todo list entry updated - New task added');
-		    TodoListEntry.findById(listId).populate('items').exec(function (err, updatedEntry) {
-		        if (err) {
-		            console.log('Unable to retrieve todo list entry.');
-		            res.send(err);
-		        }
-		        res.send(JSON.stringify(updatedEntry));
-		    });
-		}			
-	});
+    TodoListEntry.findById(listId, function (err, list) {
+        if (err) { }
+        else {
+            list.items.push(listId);
+            console.log('List has now ' + list.items.length + ' tasks');
+            list.save(function (err, list) {
+                if (err) { }
+                else {
+                    console.log('List is saved, populate items');
+                    TodoListEntry.populate(list, { path: 'items' }, function (err, list) {
+                        if (err) { }
+                        else {
+                            res.send(JSON.stringify(list));
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+
+	//TodoListEntry.update({_id: listId}, {$push: {items: taskId}}, {safe:true, upsert: true}, function(err, result){
+	//	if(err) {
+	//		console.log('Error updating todo list. ' + err);
+    //        console.log(err);
+    //        res.send(err); 
+	//	}
+	//	else{
+	//	    console.log(result + ' todo list entry updated - New task added');
+	//	    TodoListEntry.findById(listId).populate('items').exec(function (err, updatedEntry) {
+	//	        if (err) {
+	//	            console.log('Unable to retrieve todo list entry.');
+	//	            res.send(err);
+	//	        }
+	//	        res.send(JSON.stringify(updatedEntry));
+	//	    });
+	//	}			
+	//});
 };
 
 exports.removeList = function(req,res) {
