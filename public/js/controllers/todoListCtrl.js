@@ -70,23 +70,23 @@
             });
     };
 
-    function updateList(list, next) {
+    function updateList() {
         $scope.isCollapsed = true;
         var id = list._id;
-        list.$update({ Id: id }, 
+        $scope.newlist.$update({ Id: id }, 
             function (list) { //success
                 if (!list)
                     $log.log('Impossible to update todoList entry');
-                next();
             },
             function (err) { //error
             });
     };
 
     function createTask() {
-        $scope.isCollapsed = true;;
+        $scope.isCollapsed = true;
+        $scope.newTask.listId = $scope.data.list._id;
         var newTask = new tasks($scope.newTask);
-        newTask.$create( //TODO deplacer la creation d'une tache en backend pour eviter des erreurs ici avec Angular. Appeler directement addtask ou on cree la tache puis on l'ajoute.
+        newTask.$create(
             function (task) { //success
                 if (!task)
                     $log.log('Impossible to create new task entry');
@@ -106,14 +106,14 @@
             });
     };
     
-    function updateTask(task, next) {
+    function updateTask() {
         $scope.isCollapsed = true;
-        var id = list._id;
-        task.update({ Id: id }, 
+        var newTask = new tasks($scope.newTask); //need an instance of the service. $scope.newTask is not such an instance.
+        var id = task._id;
+        newTask.$save({ Id: id }, 
             function (task) { //success
                 if (!task)
                     $log.log('Impossible to update task entry');
-                next();
             },
             function (err) { //error
             });
@@ -150,14 +150,14 @@
         if ($scope.buttonText == 'Create')
             createList();
         else
-            updateList($scope.newlist);
+            updateList();
     };
 
     $scope.actionTask = function () {
         if ($scope.buttonText == 'Create')
             createTask();
         else
-            updateTask($scope.newtask);
+            updateTask();
     };
     
     $scope.cancel = function () {
@@ -211,7 +211,7 @@
             e.preventDefault(); //pour empecher que le content soit développé
             e.stopPropagation();
         }
-        $scope.newtask = task;
+        $scope.newTask = task;
         $scope.buttonText = 'Update';
         $scope.isCollapsed = false;
     };
@@ -231,7 +231,7 @@
     $scope.chgState = function (item) {
         var id = item._id;
         item.done = !item.done;
-        tasks.update({ Id: id },
+        item.update({Id: id},
             function (entry) { //success
                 if (!entry)
                     $log.log('Impossible to update todoList entry');

@@ -60,9 +60,6 @@ todoListApp.factory('tasks',['$resource', function($resource) {
 					},
 				create: {
 				    	method: 'POST'
-				    },
-				update: {
-				    	method: 'POST'
 				    }
 			});
 }]);
