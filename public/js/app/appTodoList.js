@@ -63,9 +63,6 @@ todoListApp.factory('tasks',['$resource', function($resource) {
 				    },
 				update: {
 				    	method: 'POST'
-				    },    
-				remove: {
-				    	method: 'DELETE'
 				    }
 			});
 }]);

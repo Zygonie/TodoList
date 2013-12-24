@@ -135,13 +135,11 @@ exports.addTaskToList = function(req, res) {
     TodoListEntry.findById(listId, function (err, list) {
         if (err) { }
         else {
-            list.items.push(listId);
-            console.log('List has now ' + list.items.length + ' tasks');
+            list.items.push(taskId);
             list.save(function (err, list) {
                 if (err) { }
                 else {
-                    console.log('List is saved, populate items');
-                    TodoListEntry.populate(list, { path: 'items' }, function (err, list) {
+                    list.populate('items', function (err, list) {
                         if (err) { }
                         else {
                             res.send(JSON.stringify(list));

@@ -1,72 +1,16 @@
 ﻿@media (max-width: 799px) {
-    .accordion-heading {
-        font-size: 20px;
-        line-height: 30px;
-    }
-
-    .buttonLog {
-        margin-top: 4px;
-        margin-right: 8px;
-        font-size: 26px;
-        line-height: 28px;
-    }
-
-    .accordion .checkBox {
-        margin-right: -45px;
-        margin-top: 5px;
-        height: 30px;
-    }
+    
 }
 
 @media (min-width: 799px) {
-    .accordion-heading {
-        font-size: 14px;
-        line-height: 16px;
-    }
-
-    .buttonLog {
-        margin-top: 4px;
-        margin-right: 4px;
-        font-size: 8px;
-        line-height: 18px;
-    }
-    
-    .accordion .checkBox {
-        margin-right: -25px;
-        margin-top: 5px;
-        height: 20px;
-    }
 }
+
+body {
+        background: #666;
+    }
 
 .wrapper {
     margin-top: 70px;
-}
-
-
-.accordion {
-    margin-top: 10px;
-    display: block;
-    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-}
-
-.accordion-heading {
-    padding: 5px 15px;
-    color: white;
-}
-
-.accordion-group {
-    margin-bottom: 0px;
-    background-color: #C0C0C0;
-    border: 0px;
-    border-bottom: 1px solid;
-    border-bottom-color: white;
-    border-radius: 0px;
-}
-
-.accordion-heading a {
-    color: black;
 }
 
 .headDone{
@@ -77,29 +21,6 @@
 .headDone a{
     background-color: #C0C0C0;
     color: #5F5F5F;
-}
-
-.accordion-inner {
-   border-top: 0px;
-}
-
-.accordion-body p {
-   font-size: 14px;
-   line-height: 18px;
-   padding-left: 15px;
-   padding-right: 120px;
-}
-
-.accordion .checkBox {
-   margin-right: -25px;
-   margin-top: 5px;
-   height: 20px;
-}
-
-.searchInput {
-   clear: both;
-   margin-top: 10px;
-   margin-left: 0px;
 }
 
 .navbar-inverse .nav .active>a, .navbar-inverse .nav .active>a:hover, .navbar-inverse .nav .active>a:focus {
@@ -123,6 +44,7 @@
    margin-bottom: 0px;  
 }
 
+/* Liste view*/
 .newTodoListPanel {
     margin-top: 20px;
     margin-bottom: 50px;
@@ -145,30 +67,193 @@
     display:inline-block;
 }
 
-.wrapperList {
-    margin-top: 30px;
-}
-
-.listTitle {
-    color: black;
-    height: 100%;
-    width: 100%;
-    display:block;
-    text-decoration: none;
-    text-indent: 5px;
-}
-
-.listTitle:hover {
-    color: black;
-    background-color: #808080;
-    cursor: pointer;
-}
-
 .buttonList {
     margin-right: 2px;
+    visibility: hidden;
 }
 
 .buttonListToolbar {
-    margin-top: 55px;
-    bottom: 0;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 }
+
+#content > ul, li {
+    list-style: none;
+}
+
+#content > ul {
+    overflow: hidden;
+    padding: 3em;
+}
+
+    #content > ul li a {
+        text-indent: 60px;
+        overflow: hidden;
+        word-wrap: break-word;        
+        font-family:"Reenie Beanie",arial,sans-serif;
+        font-size: 50px;
+        line-height: 40px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #000;
+        background: #ffc;
+        background-image: url(../img/lined-paper-background.jpg);
+        display: block;
+        height: 180px;
+        width: 180px;
+        max-height: 180px;
+        max-width: 180px;
+        padding: 20px;
+        /* Firefox */
+        -moz-box-shadow: -5px 5px 7px rgba(33,33,33,1);
+        /* Safari+Chrome */
+        -webkit-box-shadow: -5px 5px 7px rgba(33,33,33,.7);
+        /* Opera */
+        box-shadow: -5px 5px 7px rgba(33,33,33,.7);
+        -moz-transition: -moz-transform .15s linear;
+        -o-transition: -o-transform .15s linear;
+        -webkit-transition: -webkit-transform .15s linear;
+    }
+
+    #content > ul li a:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 5px;
+        width: 70px;
+        height: 50px;
+        z-index: 10;
+        background-image: url(../img/PIN.png);
+    }
+    
+    #content > ul li {
+        margin: 20px;
+        float: left;
+    }
+
+        #content > ul li a {
+            -webkit-transform: rotate(-6deg);
+            -o-transform: rotate(-6deg);
+            -moz-transform: rotate(-6deg);
+        }
+
+        #content > ul li:nth-child(even) a {
+            -o-transform: rotate(4deg);
+            -webkit-transform: rotate(4deg);
+            -moz-transform: rotate(4deg);
+            position: relative;
+            top: 5px;
+            background: #cfc;
+            background-image: url(../img/lined-paper-background-G.jpg);
+        }
+
+        #content > ul li:nth-child(3n) a {
+            -o-transform: rotate(-3deg);
+            -webkit-transform: rotate(-3deg);
+            -moz-transform: rotate(-3deg);
+            position: relative;
+            top: -5px;
+            background: #ccf;
+            background-image: url(../img/lined-paper-background-M.jpg);
+        }
+
+        #content > ul li:nth-child(5n) a {
+            -o-transform: rotate(5deg);
+            -webkit-transform: rotate(5deg);
+            -moz-transform: rotate(5deg);
+            position: relative;
+            top: -10px;
+        }
+
+        #content > ul li a:hover, ul li a:focus {
+            cursor: pointer;
+            -moz-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+            -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+            box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+            -webkit-transform: scale(1.25);
+            -moz-transform: scale(1.25);
+            -o-transform: scale(1.25);
+            position: relative;
+            z-index: 5;
+        } 
+
+        #content > ul li a:hover .buttonList, ul li a:focus .buttonList {
+            visibility: visible;
+        }
+/* Tasks list details */
+
+.formTask {
+    margin-top: 20px;
+}
+
+.buttonTask {
+    margin-right: 2px;
+    visibility: hidden;
+}
+
+.checkBoxUndone {
+    background-image: url(../img/OkBlack.png);
+    -moz-background-size: 100%;
+    -webkit-background-size: 100%;
+    -o-background-size: 100%;
+    margin-right: -50px;
+    margin-top: -12px;
+    height: 36px;
+    width: 36px;
+    text-indent: -9999px;
+}
+
+.checkBoxUndone:hover {
+    background-image: url(../img/OkGreen.png);
+}
+
+.checkBoxDone {
+    background-image: url(../img/OkGreen.png);
+    -moz-background-size: 100%;
+    -webkit-background-size: 100%;
+    -o-background-size: 100%;
+    margin-right: -50px;
+    margin-top: -12px;
+    height: 36px;
+    width: 36px;
+    text-indent: -9999px;
+}
+
+.checkBoxDone:hover {
+    background-image: url(../img/OkBlack.png);
+}
+
+.wrapperlist{
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+}
+
+.wrapperlist .item {
+    width: 100%;
+    margin-left: 0px;
+    border: 1px solid #bbbbbb;
+    padding: 7px;
+    margin-bottom: 1px;
+    background-color: #ffc;
+}
+
+.wrapperlist > .item:hover .buttonTask {
+    visibility: visible;
+}
+
+.wrapperlist > .item:hover {
+    background-color: #075fd9;
+    border: 1px solid #000dff;
+    color: #ffc;
+}
+
+.donelist {
+    margin-top: 30px;
+    border-top: 1px solid #C0C0C0;
+    padding-top: 30px;
+}
+
+/*test*/

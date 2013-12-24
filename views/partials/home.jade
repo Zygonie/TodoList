@@ -10,9 +10,15 @@ div.row-fluid(ng-show="loaded")
                div.btn-toolbar
                   button.btn.btn-primary(ng-click="action()") {{buttonText}}
                   button.btn(ng-click="cancel()") Cancel 
-      div.row-fluid.wrapperList
-         div.listItem(ng-repeat="item in data.lists")
-            a.listTitle(ng:click="showDetails(item)") {{item.title}}
-              div.btn-toolbar.buttonListToolbar(role="toolbar")
-                button.btn.btn-mini.btn-danger.pull-right.buttonList(ng:click="removeList(item)") X
-                button.btn.btn-mini.btn-info.pull-right.buttonList(ng:click="editList(item,$event)") ...
+      div.row-fluid#content
+        ul
+          li(ng-repeat="item in data.lists | orderBy:'creationDate'")
+             a(ng:click="showDetails(item)") 
+               | ({{item.items.length}})
+               br
+               | {{item.title}}
+               div.btn-toolbar.buttonListToolbar(role="toolbar")
+                 button.btn.btn-primary.btn-mini.pull-right.buttonList(ng:click="removeList(item)") 
+                    i.icon-remove-sign.icon-white
+                 button.btn.btn-info.btn-mini.pull-right.buttonList(ng:click="editList(item,$event)")
+                    i.icon-edit.icon-white

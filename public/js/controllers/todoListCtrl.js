@@ -94,6 +94,7 @@
                     $scope.data.list.$addtask({ Id: sharedService.data.list._id, TaskId: task._id },
                         function (list) { //success
                             sharedService.data.list = list;
+                            $scope.tasksPresent = true;
                             $scope.newTask = {};
                         },
                         function (list) { //error
@@ -104,15 +105,7 @@
             function (err) { //error
             });
     };
-
-    //function createTask() {
-    //    tasks.$create({newTask: $scope.newTask},
-    //        function (task) {
-    //            sharedService.data.list = list;
-    //            }, 
-    //        function(err) {});
-    //    };
-
+    
     function updateTask(task, next) {
         $scope.isCollapsed = true;
         var id = list._id;
@@ -201,10 +194,10 @@
 
     $scope.removeTask = function (task) {
         var id = task._id;
-        task.$remove({ Id: id }, 
+        tasks.delete({ Id: id }, 
             function (task) { //success
-                for (idx in $scope.data.lists) {
-                    if ($scope.data.list.items[idx] == task) {
+                for (idx in $scope.data.list.items) {
+                    if ($scope.data.list.items[idx]._id == id) {
                         $scope.data.list.items.splice(idx, 1);
                     }
                 }
@@ -238,7 +231,7 @@
     $scope.chgState = function (item) {
         var id = item._id;
         item.done = !item.done;
-        item.$update({ Id: id },
+        tasks.update({ Id: id },
             function (entry) { //success
                 if (!entry)
                     $log.log('Impossible to update todoList entry');

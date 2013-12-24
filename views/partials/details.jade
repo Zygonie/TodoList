@@ -1,11 +1,10 @@
-﻿div.container-fluid.wrapper(ng-init="initTasks()")
-        div.row-fluid         
-           div.offset2.span9
+﻿div.row-fluid(ng-init="initTasks()")
+           div.offset1.span10
               div.row-fluid   
                  button.btn.btn-primary(ng-click="showNewTaskPanel();") Nouvelle tâche              
               div(collapse="isCollapsed")
-                  div.span8.offset1.backlogPanel
-                    form.formLog
+                  div.span8.offset2.backlogPanel
+                    form.formTask
                        textarea.input-block-level(rows = 3, placeholder='Description de tâche', ng-model="newTask.description")
                        select.input-block-level.optional(ng-model="newTask.importance")
                           option(value="", disabled, selected) Importance
@@ -15,25 +14,19 @@
                        div.btn-toolbar
                           button.btn.btn-primary(ng-click="actionTask()") {{buttonText}}
                           button.btn(ng-click="cancel()") Cancel
-              div.span12(ng-show="tasksPresent")                    
-                 div.accordion.span8.offset1#accordionLog
-                    div.accordion-group(ng-repeat="item in data.list.items | filter:searchNotDone | orderBy:importance")
-                       img.checkBox.pull-right(ng-src="{{item.done && '/img/OkGreen.png' || '/img/OkBlack.png'}}", ng-click="chgState(item)", ng-model="item.done")
-                       a.btn.btn-mini.btn-danger.pull-right.buttonLog(ng:click="removeTask(item)") X
-                       a.btn.btn-mini.btn-info.pull-right.buttonLog(ng:click="editTask(item,$event)") ...                       
-                       div.accordion-heading                          
-                          a.accordion-toogle(data-toggle="collapse", data-parent="#accordionLog", href="#collapse{{$index + 1}}") ({{item.importance}}) {{item.description}}                      
-                       div.accordion-body.collapse(id="collapse{{$index+1}}")
-                          div.accordion-inner                             
-                             p {{item.description}}
-              div.span12(ng-show="doneTasksPresent") 
-                 div.accordion.span8.offset1#accordionLog2
-                    div.accordion-group(ng-repeat="item in data.list.items | filter:searchDone | orderBy:importance")
-                       img.checkBox.pull-right(ng-src="{{item.done && '/img/OkGreen.png' || '/img/OkBlack.png'}}", ng-click="chgState(item)")
-                       a.btn.btn-mini.btn-danger.pull-right.buttonLog(ng:click="removeTask(item)") X
-                       a.btn.btn-mini.btn-info.pull-right.buttonLog(ng:click="editTask(item,$event)") ...                       
-                       div.accordion-heading                          
-                          a.accordion-toogle(data-toggle="collapse", data-parent="#accordionLog2", href="#collapse{{$index + 1}}") ({{item.importance}}) {{item.description}}                      
-                       div.accordion-body.collapse(id="collapse{{$index+1}}")
-                          div.accordion-inner                             
-                             p {{item.description}}                
+              div.wrapperlist(ng-show="tasksPresent")   
+                 div.item(ng-repeat="item in data.list.items | filter:searchNotDone | orderBy:importance")
+                    a.checkBoxUndone.pull-right(ng-click="chgState(item)") test
+                    a.btn.btn-mini.pull-right.buttonTask(ng:click="removeTask(item)")
+                        i.icon-remove-sign
+                    a.btn.btn-mini.pull-right.buttonTask(ng:click="editTask(item,$event)")
+                        i.icon-edit
+                    span {{$index+1}} - {{item.description}} ({{item.importance}})               
+              div.wrapperlist.donelist(ng-show="tasksPresent")   
+                 div.item(ng-repeat="item in data.list.items | filter:searchDone | orderBy:importance")
+                    a.checkBoxDone.pull-right(ng-click="chgState(item)") test
+                    a.btn.btn-mini.pull-right.buttonTask(ng:click="removeTask(item)")
+                        i.icon-remove-sign
+                    a.btn.btn-mini.pull-right.buttonTask(ng:click="editTask(item,$event)")
+                        i.icon-edit
+                    span {{$index+1}} - {{item.description}} ({{item.importance}})                 
