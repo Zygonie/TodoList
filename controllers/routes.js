@@ -203,7 +203,8 @@ exports.getTask = function(req, res) {
 exports.createTask = function(req, res) {
 	var entry = new TaskEntry({
         description: req.body.description,
-        importance: req.body.importance
+        importance: req.body.importance,
+        listId: req.body.listId
         });
 	entry.save(function(err, entry) {
 		if(err) {
@@ -236,16 +237,25 @@ exports.updateTask = function(req, res) {
 };
 
 exports.removeTask = function(req,res) {
-	var Id = req.params.Id;
-	TaskEntry.findByIdAndRemove(Id, function(err, entry) {
+	TaskEntry.findByIdAndRemove(req.params.Id, function(err, entry) {
 	    if (err) {
-	    	console.log('An error hase occured while trying to delete task entry with Id: ' + Id);
+	    	console.log('An error has occured while trying to delete task entry with Id: ' + req.params.Id);
             console.log(err);
             res.send(err);
 	    }
 	    else {
-	        console.log('Task entry with Id ' + Id + ' has well been removed from DB');
-	        res.send(JSON.stringify(entry));
+            // Remove from list
+	        TodoListEntry.findByIdAndUpdate(entry.listId, { $pull: { items: { _id: req.params.Id } } }, function (err, list) {
+	            if (err) {
+	                console.log('An error has occured while trying to delete task entry with Id: ' + req.params.Id + ' from the list.');
+	                console.log(err);
+	                res.send(err);
+	            }
+	            else {
+	                console.log('Task entry with Id ' + req.params.Id + ' has well been removed from DB');
+	                res.send(JSON.stringify(entry));
+	            }
+	        });
 	    }
 	});
 };

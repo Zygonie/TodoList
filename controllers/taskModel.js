@@ -2,7 +2,9 @@
  * Task Schema
  */
 var mongoose = require('mongoose')
-  , Schema = mongoose.Schema;
+  , Schema = mongoose.Schema
+  , dbTodoList = require('./todoListModel')
+  , TodoListEntry = dbTodoList.todoListModel;
 
 // Schema
 var taskSchema = new Schema({	
@@ -13,8 +15,6 @@ var taskSchema = new Schema({
     done: {type: Boolean, default: false}
 });
 
-//http://stackoverflow.com/questions/20009122/removing-many-to-many-reference-in-mongoose
-//need to index items for better performances because full table is scanned
 taskSchema.pre('remove', function(next){
     this.model('TodoList').findById(this.listId, function(list,next) {
         list.items.id(this._id).remove();
