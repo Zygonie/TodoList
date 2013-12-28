@@ -1,13 +1,17 @@
 ﻿@media (max-width: 799px) {
-    
 }
 
 @media (min-width: 799px) {
 }
 
 body {
-        background: #666;
-    }
+    background: #666;
+    background: url('../img/todolist.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
 
 .wrapper {
     margin-top: 70px;

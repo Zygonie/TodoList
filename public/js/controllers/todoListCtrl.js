@@ -57,7 +57,7 @@
     function createList() {
         $scope.isCollapsed = true;
         var newList = new todoLists($scope.newlist);
-        newList.$create(
+        newList.$save({},
             function (list) { //success
                 if (!list)
                     $log.log('Impossible to create new todoList entry');
@@ -67,6 +67,7 @@
                 }
             },
             function (err) { //error
+                $log.log('Impossible to create new todoList entry');
             });
     };
 

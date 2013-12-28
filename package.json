@@ -19,7 +19,8 @@
     "bcrypt": "*",
     "grunt": "*",
     "connect-redis": "*",
-    "redis": "*"
+    "redis": "*",
+	"async": "*"
   },
   "engine": "node 0.10.24"
 }

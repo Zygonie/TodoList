@@ -35,9 +35,6 @@ todoListApp.factory('todoLists',['$resource', function($resource) {
 	return $resource('/api/todoList/:Id/:TaskId',
 			{ Id: '@Id', TaskId: '@TaskId' },
 			{
-				create: {
-				    	method: 'POST'
-				    },
 				update: {
 				    	method: 'POST'
 				    }, 

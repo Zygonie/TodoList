@@ -14,22 +14,24 @@ var taskSchema = new Schema({
 });
 
 taskSchema.pre('remove', function(next){    
-    this.model('TodoList').findById(this.listId, function (err, list, next) {
+	var task = this;
+    this.model('TodoList').findById(task.listId, function (err, list) {
         if (err) {
-            console.log('An error has occured while trying to delete task entry with Id: ' + this._id + ' in the <pre> middleware');
+            console.log('An error has occured while trying to delete task entry with Id: ' + task._id + ' in the <pre> middleware');
             console.log(err);
             res.send(err);
         }
         else {
-            if(!list) console.log('Could not find list with _id:' + this.listId);
-            list.items.pull(this._id);
-            list.save(function (err, updatedlist, next) {
+            if(!list) console.log('Could not find list with _id:' + task.listId);
+            list.items.pull(task._id);
+            list.save(function (err, updatedlist) {
                 if (err) {
-                    console.log('An error has occured while trying to save the updted list when deleting task entry with Id: ' + this._id + ' in the <pre> middleware');
+                    console.log('An error has occured while trying to save the updted list when deleting task entry with Id: ' + task._id + ' in the <pre> middleware');
                     console.log(err);
                     res.send(err);
                 }
                 else {
+                    console.log('Task entry with Id ' + task._id + ' has well been removed from list items.');
                     next();
                 }
             });

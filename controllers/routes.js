@@ -75,7 +75,7 @@ exports.getList = function(req, res) {
             if (err) {
                 console.log('Unable to retrieve todo list entry.');
                 console.log(err);
-                res.send(err);
+                res.send(500, { error: err.toString()});
             }
             res.send(JSON.stringify(entries));
         });
@@ -85,7 +85,7 @@ exports.getList = function(req, res) {
             if (err) {
                 console.log('Unable to retrieve todo list entry.');
                 console.log(err);
-                res.send(err);
+                res.send(500, { error: err.toString()});
             }
             res.send(JSON.stringify(entries));
         });
@@ -102,7 +102,7 @@ exports.createList = function(req, res) {
 	entry.save(function(err, entry) {
 		if(err) {
 			console.log(err);
-            res.send(err);
+            res.send(500, { error: err.toString()});
 	    } 
 		else {
 			console.log('New todo list entry has been posted.');	
@@ -119,7 +119,7 @@ exports.updateList = function(req, res) {
 		if(err) {
 			console.log('Error updating todo list. ' + err);
             console.log(err);
-            res.send(err);
+            res.send(500, { error: err.toString()});
 		}
 		else{
 			console.log(result + ' todo list entry updated');
@@ -137,7 +137,10 @@ exports.addTaskToList = function(req, res) {
         else {
             list.items.push(taskId);
             list.save(function (err, list) {
-                if (err) { }
+                if (err) { 
+                    console.log(err);
+                    res.send(500, { error: err.toString()});
+                }
                 else {
                     list.populate('items', function (err, list) {
                         if (err) { }
@@ -153,15 +156,24 @@ exports.addTaskToList = function(req, res) {
 
 exports.removeList = function(req,res) {
 	var Id = req.params.Id;
-	TodoListEntry.findByIdAndRemove(Id, function(err, entry) {
+	TodoListEntry.findById(Id, function(err, foundEntry) {
 	    if (err) {
-	    	console.log('An error hase occured while trying to delete todo list entry with Id: ' + Id);
-            console.log(err);
-            res.send(err);
+	        console.log('An error hase occured while trying to find todo list entry to remove with Id: ' + Id);
+	        console.log(err);
+	        res.send(500, { error: err.toString()});
 	    }
 	    else {
-	        console.log('Todo list entry with Id ' + Id + ' has well been removed from DB');
-	        res.send(JSON.stringify(entry));
+	        foundEntry.remove(function (err, entry) {
+	            if (err) {
+	                console.log('An error has occured while trying to delete task entry with Id: ' + req.params.Id);
+	                console.log(err);
+	                res.send(500, { error: err.toString()});
+	            }
+	            else {
+	                console.log('Todo list entry with Id ' + Id + ' has well been removed from DB');
+	                res.send(JSON.stringify(entry));
+	            }
+	        });
 	    }
 	});
 };
@@ -175,7 +187,7 @@ exports.getTask = function(req, res) {
 		if(err) {
 			console.log('Unable to retrieve task entry.');
             console.log(err);
-            res.send(err);
+            res.send(500, { error: err.toString()});
 		}
 		res.send(JSON.stringify(entries));
 	});
@@ -190,7 +202,7 @@ exports.createTask = function(req, res) {
 	entry.save(function(err, entry) {
 		if(err) {
 			console.log(err);
-            res.send(err);
+            res.send(500, { error: err.toString()});
 	    } 
 		else {
 			console.log('New task entry has been posted.');	
@@ -207,7 +219,7 @@ exports.updateTask = function(req, res) {
 		if(err) {
 			console.log('Error updating task. ' + err);
             console.log(err);
-            res.send(err);
+            res.send(500, { error: err.toString()});
 		}
 		else{
 			console.log(result + ' task entry updated');
@@ -222,28 +234,18 @@ exports.removeTask = function(req,res) {
         if (err) {
             console.log('An error has occured while trying to delete task entry with Id: ' + req.params.Id);
             console.log(err);
-            res.send(err);
+            res.send(500, { error: err.toString()});
         }
         else {
             foundEntry.remove(function (err, entry) {
                 if (err) {
                     console.log('An error has occured while trying to delete task entry with Id: ' + req.params.Id);
                     console.log(err);
-                    res.send(err);
+                    res.send(500, { error: err.toString()});
                 }
                 else {
-                    // Remove from list
-                    //TodoListEntry.findByIdAndUpdate(entry.listId, { $pull: { items: { _id: req.params.Id } } }, function (err, list) {
-                    //    if (err) {
-                    //        console.log('An error has occured while trying to delete task entry with Id: ' + req.params.Id + ' from the list.');
-                    //        console.log(err);
-                    //        res.send(err);
-                    //    }
-                    //    else {
                     console.log('Task entry with Id ' + req.params.Id + ' has well been removed from DB');
                     res.send(JSON.stringify(entry));
-                    //    }
-                    //});
                 }
             });
         }
