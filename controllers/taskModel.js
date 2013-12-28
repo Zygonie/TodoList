@@ -2,9 +2,7 @@
  * Task Schema
  */
 var mongoose = require('mongoose')
-  , Schema = mongoose.Schema
-  , dbTodoList = require('./todoListModel')
-  , TodoListEntry = dbTodoList.todoListModel;
+  , Schema = mongoose.Schema;
 
 // Schema
 var taskSchema = new Schema({	
@@ -15,10 +13,27 @@ var taskSchema = new Schema({
     done: {type: Boolean, default: false}
 });
 
-taskSchema.pre('remove', function(next){
-    this.model('TodoList').findById(this.listId, function(list,next) {
-        list.items.id(this._id).remove();
-        next();
+taskSchema.pre('remove', function(next){    
+    this.model('TodoList').findById(this.listId, function (err, list, next) {
+        if (err) {
+            console.log('An error has occured while trying to delete task entry with Id: ' + this._id + ' in the <pre> middleware');
+            console.log(err);
+            res.send(err);
+        }
+        else {
+            if(!list) console.log('Could not find list with _id:' + this.listId);
+            list.items.pull(this._id);
+            list.save(function (err, updatedlist, next) {
+                if (err) {
+                    console.log('An error has occured while trying to save the updted list when deleting task entry with Id: ' + this._id + ' in the <pre> middleware');
+                    console.log(err);
+                    res.send(err);
+                }
+                else {
+                    next();
+                }
+            });
+        }
     });
 });
 

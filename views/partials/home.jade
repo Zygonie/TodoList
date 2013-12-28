@@ -18,7 +18,7 @@ div.row-fluid(ng-show="loaded")
                br
                | {{item.title}}
                div.btn-toolbar.buttonListToolbar(role="toolbar")
-                 button.btn.btn-primary.btn-mini.pull-right.buttonList(ng:click="removeList(item)") 
+                 button.btn.btn-primary.btn-mini.pull-right.buttonList(ng:click="removeList(item,$event)") 
                     i.icon-remove-sign.icon-white
                  button.btn.btn-info.btn-mini.pull-right.buttonList(ng:click="editList(item,$event)")
                     i.icon-edit.icon-white
