@@ -16,7 +16,11 @@ var express = require('express')
   , path = require ('path')
   , pass = require('./controllers/passport')  
   , routes = require('./controllers/routes')
-  , port = process.env.PORT || 8080;
+  , port = process.env.PORT || 8080
+  , RedisStore = require('connect-redis')(express)
+  , redis = require('redis')
+  , path = require('path')
+  , url = require('url');
 
 //Database connect
 var uristring = 'mongodb://' + process.env.UserNameMongoHQ + ':' + process.env.PassWordMongoHQ + '@paulo.mongohq.com:10001/TodoListDB';
