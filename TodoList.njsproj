@@ -68,7 +68,6 @@
     <Content Include="public\img\lined-paper-background.jpg" />
     <Content Include="public\img\OkBlack.png" />
     <Content Include="public\img\OkGreen.png" />
-    <Content Include="public\img\PIN.jpg" />
     <Content Include="public\img\PIN.png" />
     <Content Include="public\img\todolist.jpg" />
     <Content Include="README.md" />
