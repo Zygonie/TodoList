@@ -20,8 +20,8 @@ var production = {
         clientSecret: ""
     },  
     google: {
-        returnURL: '',
-        realm: ''
+        returnURL: 'http://smartlist.zygonie.com/auth/google/return',
+        realm: 'http://smartlist.zygonie.com/'
         },
     env : global.process.env.NODE_ENV || 'production'
 };
