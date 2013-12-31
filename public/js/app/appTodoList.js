@@ -31,34 +31,15 @@ todoListApp.config(['$routeProvider','$locationProvider', function($routeProvide
 /*
  * Service TodoList
  */
-todoListApp.factory('todoLists',['$resource', function($resource) {
-	return $resource('/api/todoList/:Id/:TaskId',
-			{ Id: '@Id', TaskId: '@TaskId' },
-			{
-				update: {
-				    	method: 'POST'
-				    }, 
-                addtask: {
-                    method: 'POST'
-                    }
-			});
+todoListApp.factory('ListService',['$resource', function($resource) {
+	return $resource('/api/todoList/:Id', { Id: '@Id'}, {});
 }]);
 
 /*
  * Service Task
  */
-todoListApp.factory('tasks',['$resource', function($resource) {
-	return $resource('/api/task/:Id',
-			{ Id: '@Id' },
-			{
-				query:{
-					method: 'GET', 
-					isArray: true
-					},
-				create: {
-				    	method: 'POST'
-				    }
-			});
+todoListApp.factory('TaskService',['$resource', function($resource) {
+	return $resource('/api/task/:Id', { Id: '@Id' }, {});
 }]);
 
 /*

@@ -1,4 +1,4 @@
-﻿function todoListCtrl($scope, $log, $location, $route, $routeParams, todoLists, tasks, sharedService) {
+﻿function todoListCtrl($scope, $log, $location, $route, $routeParams, ListService, TaskService, sharedService) {
 
     $scope.isCollapsed = {};
     $scope.buttonText = 'Create';
@@ -56,13 +56,13 @@
 
     function createList() {
         $scope.isCollapsed = true;
-        var newList = new todoLists($scope.newlist);
-        newList.$save({},
+        var newList = new ListService($scope.newlist);
+        newList.$save(
             function (list) { //success
                 if (!list)
                     $log.log('Impossible to create new todoList entry');
                 else {
-                    $scope.data.lists.push(list);
+                    $scope.data.Lists.push(list);
                     $location.path('/todoList/home');
                 }
             },
@@ -73,8 +73,7 @@
 
     function updateList() {
         $scope.isCollapsed = true;
-        var id = list._id;
-        $scope.newlist.$update({ Id: id }, 
+        $scope.newlist.$save({Id: $scope.newlist._id},
             function (list) { //success
                 if (!list)
                     $log.log('Impossible to update todoList entry');
@@ -86,21 +85,15 @@
     function createTask() {
         $scope.isCollapsed = true;
         $scope.newTask.listId = $scope.data.list._id;
-        var newTask = new tasks($scope.newTask);
-        newTask.$create(
+        var newTask = new TaskService($scope.newTask);
+        newTask.$save(
             function (task) { //success
                 if (!task)
                     $log.log('Impossible to create new task entry');
                 else {
-                    $scope.data.list.$addtask({ Id: sharedService.data.list._id, TaskId: task._id },
-                        function (list) { //success
-                            sharedService.data.list = list;
-                            $scope.tasksPresent = true;
-                            $scope.newTask = {};
-                        },
-                        function (list) { //error
-                            $scope.newTask = {};
-                        });
+                    $scope.tasksPresent = true;
+                    $scope.data.Tasks.push(task);
+                    $scope.newTask = {};
                 }
             },
             function (err) { //error
@@ -109,9 +102,7 @@
     
     function updateTask() {
         $scope.isCollapsed = true;
-        var newTask = new tasks($scope.newTask); //need an instance of the service. $scope.newTask is not such an instance.
-        var id = task._id;
-        newTask.$save({ Id: id }, 
+        $scope.newTask.$save({Id: $scope.newTask._id}, 
             function (task) { //success
                 if (!task)
                     $log.log('Impossible to update task entry');
@@ -123,9 +114,9 @@
     $scope.initLists = function () {
         $scope.data = sharedService.data;
         $scope.isCollapsed = true;
-        todoLists.query(
+        ListService.query(
             function (res) { //success
-                $scope.data.lists = res;
+                $scope.data.Lists = res;
                 $scope.loaded = true;
                 spinner.stop();
             },
@@ -141,10 +132,17 @@
 
     $scope.initTasks = function () {
         $scope.data = sharedService.data;
-        if($scope.data.list.items.length > 0) { $scope.tasksPresent = true; }
-        for (idx in $scope.data.list.items) {
-            if ($scope.data.list.items[idx].done) { $scope.doneTasksPresent = true; }
-        }
+        TaskService.query({ listId: $scope.data.list._id },
+            function (tasks) { //success
+                if (tasks.length > 0) { $scope.tasksPresent = true; }
+                for (idx in tasks) {
+                    if (tasks[idx].done) { $scope.doneTasksPresent = true; }
+                }
+                $scope.data.Tasks = tasks;
+            },
+            function (err) { //error
+            }
+        );
     }
 
     $scope.action = function () {
@@ -173,9 +171,9 @@
         var id = list._id;
         list.$remove({ Id: id },
             function (list) { //success
-                for (idx in $scope.data.lists) {
-                    if ($scope.data.lists[idx] == list) {
-                        $scope.data.lists.splice(idx, 1);
+                for (idx in $scope.data.Lists) {
+                    if ($scope.data.Lists[idx] == list) {
+                        $scope.data.Lists.splice(idx, 1);
                     }
                 }
             },
@@ -195,11 +193,11 @@
 
     $scope.removeTask = function (task) {
         var id = task._id;
-        tasks.delete({ Id: id }, 
+        TaskService.delete({ Id: id }, 
             function (task) { //success
-                for (idx in $scope.data.list.items) {
-                    if ($scope.data.list.items[idx]._id == id) {
-                        $scope.data.list.items.splice(idx, 1);
+                for (idx in $scope.data.Tasks) {
+                    if ($scope.data.Tasks[idx]._id == id) {
+                        $scope.data.Tasks.splice(idx, 1);
                     }
                 }
             },
@@ -224,20 +222,22 @@
     };
 
     $scope.showNewTaskPanel = function () {
-        $scope.newtask = {};
+        $scope.newTask = {};
+        $scope.newTask.importance = 1;
         $scope.buttonText = 'Create';
         $scope.isCollapsed = false;
     };
 
     $scope.chgState = function (item) {
-        var id = item._id;
         item.done = !item.done;
-        item.update({Id: id},
-            function (entry) { //success
-                if (!entry)
+        var task = new TaskService(item); //need an instance of the service. $scope.newTask is not such an instance.
+        task.$save({Id: task._id},
+            function (task) { //success
+                if (!task)
                     $log.log('Impossible to update todoList entry');
             },
             function (err) { //error
+                $log.log("Hmmm");
             });
     };
 }

@@ -7,7 +7,7 @@
                     form.formTask
                        textarea.input-block-level(rows = 3, placeholder='Description de tâche', ng-model="newTask.description")
                        select.input-block-level.optional(ng-model="newTask.importance")
-                          option(value="", disabled, selected) Importance
+                          option(value="", disabled) Importance
                           option 1
                           option 2
                           option 3
@@ -15,18 +15,22 @@
                           button.btn.btn-primary(ng-click="actionTask()") {{buttonText}}
                           button.btn(ng-click="cancel()") Cancel
               div.wrapperlist(ng-show="tasksPresent")   
-                 div.item(ng-repeat="item in data.list.items | filter:searchNotDone | orderBy:importance")
+                 div.item(ng-repeat="item in data.Tasks | filter:searchNotDone | orderBy:importance")
                     a.checkBoxUndone.pull-right(ng-click="chgState(item)") test
                     a.btn.btn-mini.pull-right.buttonTask(ng:click="removeTask(item)")
                         i.icon-remove-sign
                     a.btn.btn-mini.pull-right.buttonTask(ng:click="editTask(item,$event)")
                         i.icon-edit
-                    span {{$index+1}} - {{item.description}} ({{item.importance}})               
+                    span
+                      span.emphasisIndex {{$index+1}}-
+                    |  {{item.description}} ({{item.importance}})               
               div.wrapperlist.donelist(ng-show="tasksPresent")   
-                 div.item(ng-repeat="item in data.list.items | filter:searchDone | orderBy:importance")
+                 div.item(ng-repeat="item in data.Tasks | filter:searchDone | orderBy:importance")
                     a.checkBoxDone.pull-right(ng-click="chgState(item)") test
                     a.btn.btn-mini.pull-right.buttonTask(ng:click="removeTask(item)")
                         i.icon-remove-sign
                     a.btn.btn-mini.pull-right.buttonTask(ng:click="editTask(item,$event)")
                         i.icon-edit
-                    span {{$index+1}} - {{item.description}} ({{item.importance}})                 
+                    span
+                      span.emphasisIndexDone {{$index+1}}-
+                      span.doneStyle  {{item.description}} ({{item.importance}})                

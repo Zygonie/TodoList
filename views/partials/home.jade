@@ -12,9 +12,9 @@ div.row-fluid(ng-show="loaded")
                   button.btn(ng-click="cancel()") Cancel 
       div.row-fluid#content
         ul
-          li(ng-repeat="item in data.lists | orderBy:'creationDate'")
+          li(ng-repeat="item in data.Lists | orderBy:'creationDate'")
              a(ng:click="showDetails(item)") 
-               | ({{item.items.length}})
+               | ({{item.taskCount}})
                br
                | {{item.title}}
                div.btn-toolbar.buttonListToolbar(role="toolbar")

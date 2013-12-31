@@ -2,6 +2,22 @@
 }
 
 @media (min-width: 799px) {
+    .buttonList {
+        visibility: hidden;
+    }
+
+    #content > ul li a:hover .buttonList, ul li a:focus .buttonList {
+        visibility: visible;
+    }
+
+    .buttonTask {
+        visibility: hidden;
+    }
+
+
+    .wrapperlist > .item:hover .buttonTask {
+        visibility: visible;
+    }
 }
 
 body {
@@ -73,7 +89,6 @@ body {
 
 .buttonList {
     margin-right: 2px;
-    visibility: hidden;
 }
 
 .buttonListToolbar {
@@ -181,10 +196,7 @@ body {
             position: relative;
             z-index: 5;
         } 
-
-        #content > ul li a:hover .buttonList, ul li a:focus .buttonList {
-            visibility: visible;
-        }
+        
 /* Tasks list details */
 
 .formTask {
@@ -193,7 +205,6 @@ body {
 
 .buttonTask {
     margin-right: 2px;
-    visibility: hidden;
 }
 
 .checkBoxUndone {
@@ -244,10 +255,6 @@ body {
     background-color: #ffc;
 }
 
-.wrapperlist > .item:hover .buttonTask {
-    visibility: visible;
-}
-
 .wrapperlist > .item:hover {
     background-color: #075fd9;
     border: 1px solid #000dff;
@@ -260,4 +267,17 @@ body {
     padding-top: 30px;
 }
 
-/*test*/
+.emphasisIndex {
+    font-weight: bold;
+    color: #002cff;
+    font-size: 14px;
+}
+
+.emphasisIndexDone {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.doneStyle{
+    text-decoration: line-through;
+}

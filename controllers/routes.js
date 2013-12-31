@@ -71,7 +71,7 @@ exports.getList = function(req, res) {
     var user = req.user;
     var id = req.params.Id;
     if (id) {
-        TodoListEntry.findById(id).populate('items').exec(function (err, entries) {
+        TodoListEntry.findById(id).exec(function (err, entries) {
             if (err) {
                 console.log('Unable to retrieve todo list entry.');
                 console.log(err);
@@ -81,7 +81,7 @@ exports.getList = function(req, res) {
         });
     }
     else {
-        TodoListEntry.find({ user: user }).populate('items').exec(function (err, entries) {
+        TodoListEntry.find({ user: user }).exec(function (err, entries) {
             if (err) {
                 console.log('Unable to retrieve todo list entry.');
                 console.log(err);
@@ -96,7 +96,7 @@ exports.createList = function(req, res) {
     var user = req.user;
 	var entry = new TodoListEntry({
         user: user,
-        items: [],
+        //items: [],
         title: req.body.title
         });
 	entry.save(function(err, entry) {
@@ -129,31 +129,6 @@ exports.updateList = function(req, res) {
 	});
 };
 
-exports.addTaskToList = function(req, res) {
-	var listId = req.params.Id;
-    var taskId = req.params.TaskId;
-    TodoListEntry.findById(listId, function (err, list) {
-        if (err) { }
-        else {
-            list.items.push(taskId);
-            list.save(function (err, list) {
-                if (err) { 
-                    console.log(err);
-                    res.send(500, { error: err.toString()});
-                }
-                else {
-                    list.populate('items', function (err, list) {
-                        if (err) { }
-                        else {
-                            res.send(JSON.stringify(list));
-                        }
-                    });
-                }
-            });
-        }
-    });
-};
-
 exports.removeList = function(req,res) {
 	var Id = req.params.Id;
 	TodoListEntry.findById(Id, function(err, foundEntry) {
@@ -183,32 +158,59 @@ exports.removeList = function(req,res) {
  */
 exports.getTask = function(req, res) {
     var user = req.user;
-	TaskEntry.find({user: user}).exec(function(err, entries) { 
-		if(err) {
-			console.log('Unable to retrieve task entry.');
-            console.log(err);
-            res.send(500, { error: err.toString()});
-		}
-		res.send(JSON.stringify(entries));
-	});
+    var listId = req.query.listId;
+    if (listId) {
+        TaskEntry.find({ listId: new mongoose.Types.ObjectId(listId) }).exec(function (err, entries) {
+            if (err) {
+                console.log('Unable to retrieve task entry.');
+                console.log(err);
+                res.send(500, { error: err.toString() });
+            }
+            res.send(JSON.stringify(entries));
+        });
+    }
+    else {
+        TaskEntry.find().exec(function (err, entries) {
+            if (err) {
+                console.log('Unable to retrieve task entry.');
+                console.log(err);
+                res.send(500, { error: err.toString() });
+            }
+            res.send(JSON.stringify(entries));
+        });
+    }
 };
 
-exports.createTask = function(req, res) {
-	var entry = new TaskEntry({
+exports.createTask = function (req, res) {
+    var entry = new TaskEntry({
         description: req.body.description,
         importance: req.body.importance,
         listId: req.body.listId
-        });
-	entry.save(function(err, entry) {
-		if(err) {
-			console.log(err);
-            res.send(500, { error: err.toString()});
-	    } 
-		else {
-			console.log('New task entry has been posted.');	
-			res.send(JSON.stringify(entry));
-		}
-	});
+    });
+    entry.save(function (err, entry) {
+        if (err) {
+            console.log(err);
+            res.send(500, { error: err.toString() });
+        }
+        else {
+            console.log('New task entry has been posted.');
+            // Increment count in list
+            TodoListEntry.findByIdAndUpdate(entry.listId, { $inc: { taskCount: 1 } }, function (err, list) {
+                if (err) {
+                    console.log(err);
+                    res.send(500, { error: err.toString() });
+                }
+                else {
+                    if (!list) {
+                        res.send(500, { error: "Unable to find list attached to the current task." });
+                    }
+                    else {
+                        res.send(JSON.stringify(entry));
+                    }
+                }
+            });
+        }
+    });
 };
 
 exports.updateTask = function(req, res) {
@@ -245,7 +247,21 @@ exports.removeTask = function(req,res) {
                 }
                 else {
                     console.log('Task entry with Id ' + req.params.Id + ' has well been removed from DB');
-                    res.send(JSON.stringify(entry));
+                    // Decrement count in list
+                    TodoListEntry.findByIdAndUpdate(entry.listId, { $inc: { taskCount: -1 } }, function (err, list) {
+                        if (err) {
+                            console.log(err);
+                            res.send(500, { error: err.toString() });
+                        }
+                        else {
+                            if (!list) {
+                                res.send(500, { error: "Unable to find list attached to the current task." });
+                            }
+                            else {
+                                res.send(JSON.stringify(entry));
+                            }
+                        }
+                    });
                 }
             });
         }
