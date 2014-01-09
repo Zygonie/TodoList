@@ -16,13 +16,14 @@ html
       script(src="http://code.angularjs.org/1.2.2/angular-resource.js")
       script(src="http://code.angularjs.org/1.2.2/angular-route.js")
       script(src="/js/lib/spin.min.js")
-      script(src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.js")     
+      script(src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.js")    
+      script(src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-dropdown.js")
       script(src="/js/lib/ui-bootstrap-tpls.js")
       script(src="/js/app/appTodoList.js")
-      script(src="/js/controllers/todoListCtrl.js")               
+      script(src="/js/controllers/todoListCtrl.js")  
       
-  body
-    div.navbar.navbar-inverse.navbar-fixed-top
+  body(ng-app="appTodoList", ng-controller="todoListCtrl")
+    div.navbar.navbar-inverse.navbar-fixed-top(ng-init="initLists()")
        div.navbar-inner
          div.container
             button.btn.btn-navbar(type='button', data-toggle='collapse', data-target='.nav-collapse')
@@ -31,15 +32,13 @@ html
                span.icon-bar
             a.brand(href='/') SmartTodoList
             div.nav-collapse.collapse
-              ul.nav
-                 -var menu = {'items': [{'id':'Home', 'title':'Mes listes', 'route':'todoList'}]}
-                 each menuItem in menu.items
-                    if (id == menuItem.id)
-                      li.active
-                        a(href='/#{menuItem.route}') #{menuItem.title}
-                    else            
-                      li
-                        a(href='/#{menuItem.route}') #{menuItem.title}
+              ul.nav                 
+                li.dropdown
+                   a.dropdown-toggle(href='#', data-toggle="dropdown") Mes Listes                            
+                     b.caret
+                   ul.dropdown-menu                            
+                     li(ng-repeat="item in data.Lists | orderBy:'creationDate'")
+                       a(ng:click="showDetails(item)") {{item.title}} 
             if !user        
                div.btn-toolbar.pull-right
                   a.btn.btn-primary(href='login', type='button') Log in
@@ -47,5 +46,5 @@ html
             else
                a.btn.btn-primary.pull-right(href='logout', type='button') Log out         
       
-    div.container-fluid.wrapper(ng-app="appTodoList", ng-controller="todoListCtrl")
+    div.container-fluid.wrapper
       div.row-fluid(ng-view)

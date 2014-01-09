@@ -4,6 +4,7 @@
 @media (min-width: 799px) {
     .buttonList {
         visibility: hidden;
+        margin-right: 2px;
     }
 
     #content > ul li a:hover .buttonList, ul li a:focus .buttonList {
@@ -12,6 +13,7 @@
 
     .buttonTask {
         visibility: hidden;
+        margin-right: 2px;
     }
 
 
@@ -85,10 +87,6 @@ body {
     margin-right: 3%;
     border: 1px solid #5F5F5F;
     display:inline-block;
-}
-
-.buttonList {
-    margin-right: 2px;
 }
 
 .buttonListToolbar {
@@ -203,10 +201,6 @@ body {
     margin-top: 20px;
 }
 
-.buttonTask {
-    margin-right: 2px;
-}
-
 .checkBoxUndone {
     background-image: url(../img/OkBlack.png);
     -moz-background-size: 100%;
@@ -271,6 +265,10 @@ body {
     font-weight: bold;
     color: #002cff;
     font-size: 14px;
+}
+
+.item:hover .emphasisIndex {
+    color: #0ff;
 }
 
 .emphasisIndexDone {

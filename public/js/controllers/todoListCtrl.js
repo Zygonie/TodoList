@@ -8,6 +8,7 @@
     $scope.formOn = false;
     $scope.tasksPresent = false;
     $scope.doneTasksPresent = false;
+    $scope.toFocus = false;
 
     //Spinner
     var opts = {
@@ -114,6 +115,7 @@
     $scope.initLists = function () {
         $scope.data = sharedService.data;
         $scope.isCollapsed = true;
+        $scope.toFocus = false;
         ListService.query(
             function (res) { //success
                 $scope.data.Lists = res;
@@ -127,10 +129,14 @@
     $scope.showDetails = function(listItem)
     {
         $scope.data.list = listItem;
-        $location.path('/todoList/details');
+        if($location.path() === '/todoList/details')
+            $route.reload();
+        else
+            $location.path('/todoList/details');
     };
 
     $scope.initTasks = function () {
+        $scope.toFocus = false;
         $scope.data = sharedService.data;
         TaskService.query({ listId: $scope.data.list._id },
             function (tasks) { //success
@@ -150,6 +156,7 @@
             createList();
         else
             updateList();
+        $scope.toFocus = false;
     };
 
     $scope.actionTask = function () {
@@ -157,10 +164,12 @@
             createTask();
         else
             updateTask();
+        $scope.toFocus = false;
     };
     
     $scope.cancel = function () {
         $scope.isCollapsed = true;
+        $scope.toFocus = false;
     };
 
     $scope.removeList = function (list,e) {
@@ -219,6 +228,7 @@
         $scope.newlist = {};
         $scope.buttonText = 'Create';
         $scope.isCollapsed = false;
+        $scope.toFocus = true;
     };
 
     $scope.showNewTaskPanel = function () {
@@ -226,6 +236,7 @@
         $scope.newTask.importance = 1;
         $scope.buttonText = 'Create';
         $scope.isCollapsed = false;
+        $scope.toFocus = true;
     };
 
     $scope.chgState = function (item) {

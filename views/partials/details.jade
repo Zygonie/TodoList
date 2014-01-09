@@ -5,7 +5,7 @@
               div(collapse="isCollapsed")
                   div.span8.offset2.backlogPanel
                     form.formTask
-                       textarea.input-block-level(rows = 3, placeholder='Description de tâche', ng-model="newTask.description")
+                       textarea.input-block-level(rows = 3, placeholder='Description de tâche', ng-model="newTask.description", focus="toFocus")
                        select.input-block-level.optional(ng-model="newTask.importance")
                           option(value="", disabled) Importance
                           option 1
@@ -23,7 +23,8 @@
                         i.icon-edit
                     span
                       span.emphasisIndex {{$index+1}}-
-                    |  {{item.description}} ({{item.importance}})               
+                      span(ng-bind-html="item.description")
+                    |  ({{item.importance}})               
               div.wrapperlist.donelist(ng-show="tasksPresent")   
                  div.item(ng-repeat="item in data.Tasks | filter:searchDone | orderBy:importance")
                     a.checkBoxDone.pull-right(ng-click="chgState(item)") test
