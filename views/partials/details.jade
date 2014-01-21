@@ -1,4 +1,13 @@
-﻿div.row-fluid(ng-init="initTasks()")
+﻿script.
+  function preload()
+  {
+     if (typeof angular == 'undefined')
+     {
+       window.location.replace("/todoList");
+     }
+  }  
+  window.onpaint = preload();
+div.row-fluid(ng-init="initTasks()")
            div.offset1.span10
               div.row-fluid   
                  button.btn.btn-primary(ng-click="showNewTaskPanel();") Nouvelle tâche              
