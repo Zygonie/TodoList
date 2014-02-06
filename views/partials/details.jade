@@ -7,40 +7,34 @@
      }
   }  
   window.onpaint = preload();
-div.row-fluid(ng-init="initTasks()")
-           div.offset1.span10
-              div.row-fluid   
-                 button.btn.btn-primary(ng-click="showNewTaskPanel();") Nouvelle tâche              
-              div(collapse="isCollapsed")
-                  div.span8.offset2.backlogPanel
-                    form.formTask
-                       textarea.input-block-level(rows = 3, placeholder='Description de tâche', ng-model="newTask.description", focus="toFocus")
-                       select.input-block-level.optional(ng-model="newTask.importance")
-                          option(value="", disabled) Importance
-                          option 1
-                          option 2
-                          option 3
-                       div.btn-toolbar
-                          button.btn.btn-primary(ng-click="actionTask()") {{buttonText}}
-                          button.btn(ng-click="cancel()") Cancel
-              div.wrapperlist(ng-show="tasksPresent")   
-                 div.item(ng-repeat="item in data.Tasks | filter:searchNotDone | orderBy:importance")
-                    a.checkBoxUndone.pull-right(ng-click="chgState(item)") test
-                    a.btn.btn-mini.pull-right.buttonTask(ng:click="removeTask(item)")
+div(ng-init="initTasks()")
+           section#undoneTasks
+              header.wrapperlist#header
+                  form.formTask(ng-submit="createTask()")
+                     input.input-block-level#newTaskDescription(rows = 3, placeholder='Nouvelle tâche ?', ng-model="newTask.description", autofocus, ng-blur="cancelNewTask()")
+              ul.wrapperlist(ng-show="tasksPresent")   
+                 li.item(ng-repeat="item in data.Tasks | filter:searchNotDone | orderBy:importance" ng-class="{editing: item.editing}")
+                    div.view
+                      a.checkBoxUndone.pull-right(ng-click="chgState(item)") test
+                      a.btn.btn-mini.pull-right.buttonTask(ng:click="removeTask(item)")
                         i.icon-remove-sign
-                    a.btn.btn-mini.pull-right.buttonTask(ng:click="editTask(item,$event)")
+                      a.btn.btn-mini.pull-right.buttonTask(ng:click="editTask(item,$event)")
                         i.icon-edit
-                    span
-                      span.emphasisIndex {{$index+1}}-
-                      span(ng-bind-html="item.description")
-                    |  ({{item.importance}})               
-              div.wrapperlist.donelist(ng-show="tasksPresent")   
-                 div.item(ng-repeat="item in data.Tasks | filter:searchDone | orderBy:importance")
-                    a.checkBoxDone.pull-right(ng-click="chgState(item)") test
-                    a.btn.btn-mini.pull-right.buttonTask(ng:click="removeTask(item)")
+                      span(ng:dblclick="editTask(item,$event)")
+                        span.emphasisIndex {{$index+1}}-
+                        span(ng-bind-html="item.description")
+                      |  ({{item.importance}})               
+                    form.editForm(ng-submit="doneEditing(item)")
+                      input.edit(ng-model="item.description", ng-blur="doneEditing(item)", ng-focus="item.editing", ng-Escape="undo(item)")
+           section#doneTasks
+              ul.wrapperlist(ng-show="tasksPresent")   
+                 li.item(ng-repeat="item in data.Tasks | filter:searchDone | orderBy:importance")
+                    div.view
+                      a.checkBoxDone.pull-right(ng-click="chgState(item)") test
+                      a.btn.btn-mini.pull-right.buttonTask(ng:click="removeTask(item)")
                         i.icon-remove-sign
-                    a.btn.btn-mini.pull-right.buttonTask(ng:click="editTask(item,$event)")
+                      a.btn.btn-mini.pull-right.buttonTask(ng:click="editTask(item,$event)")
                         i.icon-edit
-                    span
-                      span.emphasisIndexDone {{$index+1}}-
-                      span.doneStyle  {{item.description}} ({{item.importance}})                
+                      span
+                        span.emphasisIndexDone {{$index+1}}-
+                        span.doneStyle  {{item.description}} ({{item.importance}})                

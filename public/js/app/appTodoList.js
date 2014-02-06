@@ -75,18 +75,43 @@ todoListApp.directive('datepicker', function () {
     };
 });
 
+
 /*
- * Directive focus
+ * Directive ngBlur
  */
-todoListApp.directive('focus', ["$timeout", function ($timeout) {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-            scope.$watch(attrs.focus, function (value) {
-                if (value) {
-                    $timeout(function() { element[0].focus(); });
-                }
-            });
+todoListApp.directive('ngBlur', function () {
+    return function(scope, elem, attrs) {
+        elem.bind('blur', function(){
+            scope.$apply(attrs.ngBlur);
+            })
         }
-    };
-}]);
+});
+
+/*
+ * Directive ngFocus
+ */
+todoListApp.directive('ngFocus', function ngFocus($timeout) {
+        return function (scope, elem, attrs) {
+                scope.$watch(attrs.ngFocus, function (newVal) {
+                        if (newVal) {
+                                $timeout(function () {
+                                        elem[0].focus();
+                                }, 0, false);
+                        }
+                });
+        };
+});
+
+/*
+ * Directive ngEscape
+ */
+todoListApp.directive('ngEscape', function () {
+        var ESCAPE_KEY = 27;
+        return function (scope, elem, attrs) {
+                elem.bind('keydown', function (event) {
+                        if (event.keyCode === ESCAPE_KEY) {
+                                scope.$apply(attrs.ngEscape);
+                        }
+                });
+        };
+});

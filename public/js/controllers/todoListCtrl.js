@@ -196,18 +196,11 @@
             }
         );
     }
-
-    $scope.actionTask = function () {
-        if ($scope.buttonText == 'Create')
-            createTask();
-        else
-            updateTask();
-        $scope.toFocus = false;
-    };
     
-    function createTask() {
+    $scope.createTask = function() {
         $scope.isCollapsed = true;
         $scope.newTask.listId = $scope.data.list._id;
+        $scope.newTask.importance = 1;
         checkForUrlInTaskDescription($scope.newTask);
         var newTask = new TaskService($scope.newTask);
         newTask.$save(
@@ -251,22 +244,28 @@
     };
 
     $scope.editTask = function (task, e) {
-        if (e) {
-            e.preventDefault(); //pour empecher que le content soit développé
-            e.stopPropagation();
-        }
         $scope.newTask = task;
-        $scope.buttonText = 'Update';
-        $scope.isCollapsed = false;
+        $scope.newTask.editing = true;
+        // Clone the original todo to restore it on demand.
+        $scope.originalTask = angular.extend({}, task);
     };
 
-    $scope.showNewTaskPanel = function () {
+    $scope.doneEditing = function(task){
+        task.editing = false;
+        delete $scope.newTask.editing;
+        if($scope.newTask.description !== $scope.originalTask.description) {
+            updateTask();
+        }
+     };
+
+    $scope.undo = function (task) {
+        task.editing = false;
+    }
+
+    $scope.cancelNewTask = function()
+    {
         $scope.newTask = {};
-        $scope.newTask.importance = 1;
-        $scope.buttonText = 'Create';
-        $scope.isCollapsed = false;
-        $scope.toFocus = true;
-    };
+    }
        
     /**************
      *** Common ***
